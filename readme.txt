@@ -3,7 +3,7 @@ Contributors: nextendweb
 Tags: facebook, register, login, social connect, social, facebook connect
 Requires at least: 3.0
 Tested up to: 3.4
-Stable tag: 1.0.2
+Stable tag: 1.1
 
 This plugins helps you create Facebook login and register buttons. The login and register process only takes one click.
 
