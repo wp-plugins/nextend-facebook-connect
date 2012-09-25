@@ -11,6 +11,13 @@ This plugins helps you create Facebook login and register buttons. The login and
 
 This plugins helps you create Facebook login and register buttons. The login and register process only takes one click and you can fully customize the buttons with images and other assets.
 
+#### Usage
+**Simple link**
+&lt;a href="*siteurl*/loginFacebook?redirect=*siteurl*" onclick="window.location = \'*siteurl*/loginFacebook?redirect=\'+window.location.href; return false;"&gt;Click here to login or register with Facebook&lt;/a&gt;
+
+**Image button**
+&lt;a href="*siteurl*/loginFacebook?redirect=*siteurl*" onclick="window.location = \'*siteurl*/loginFacebook?redirect=\'+window.location.href; return false;"&gt; &lt;img src="HereComeTheImage" /&gt; &lt;/a&gt;
+
 == Installation ==
 
 1.  Extract the zip file and just drop the contents in the wp-content/plugins/ directory of your WordPress installation and then activate the Plugin from Plugins page.
