@@ -1,6 +1,6 @@
 === Nextend Facebook Connect ===
 Contributors: nextendweb 
-Tags: facebook, register, login, social connect, social
+Tags: facebook, register, login, social connect, social, facebook connect
 Requires at least: 3.0
 Tested up to: 3.4
 Stable tag: 1.0.2
