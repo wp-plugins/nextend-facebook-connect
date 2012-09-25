@@ -121,7 +121,7 @@ function new_fb_login_url(){
 
 
 /* Options Page */
-require_once(trailingslashit(dirname(__FILE__)) . "nextend-fb-settings.php");
+require_once(trailingslashit(dirname(__FILE__)) . "nextend-facebook-settings.php");
 
 if(class_exists('NextendFBSettings')) {
 	$nextendfbsettings = new NextendFBSettings();
@@ -136,8 +136,8 @@ add_filter( 'plugin_action_links', 'nextend_fb_plugin_action_links', 10, 2 );
 function nextend_fb_plugin_action_links( $links, $file ) {
   if ( $file != NEW_FB_LOGIN_PLUGIN_BASENAME )
   	return $links;
-	$settings_link = '<a href="' . menu_page_url( 'nextend-fb-connect', false ) . '">'
-		. esc_html( __( 'Settings', 'nextend-fb-connect' ) ) . '</a>';
+	$settings_link = '<a href="' . menu_page_url( 'nextend-facebook-connect', false ) . '">'
+		. esc_html( __( 'Settings', 'nextend-facebook-connect' ) ) . '</a>';
 
 	array_unshift( $links, $settings_link );
 
