@@ -14,6 +14,7 @@ This plugins helps you create Facebook login and register buttons. The login and
 == Installation ==
 
 Extract the zip file and just drop the contents in the wp-content/plugins/ directory of your WordPress installation and then activate the Plugin from Plugins page.
+
 Create a facebook app => https://developers.facebook.com/apps/?action=create
 Choose an App Name, it can be anything you like
 Click on Continue
