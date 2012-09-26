@@ -3,7 +3,7 @@
 Plugin Name: Nextend Facebook Connect
 Plugin URI: http://nextendweb.com/
 Description: This plugins helps you create Facebook login and register buttons. The login and register process only takes one click.
-Version: 1.1
+Version: 1.2
 Author: Roland Soos
 License: GPL2
 */
@@ -46,11 +46,25 @@ function nextend_fb_connect_install(){
    dbDelta($sql);
  
 }
+
+function add_author_more_query_var() {
+    global $wp;
+    $wp->add_query_var('author_more');
+}
+
+add_filter('init', 'new_fb_add_query_var');
+
+function new_fb_add_query_var(){
+  global $wp;
+  $wp->add_query_var('loginFacebook');
+  $wp->add_query_var('loginFacebookdoauth');
+}
+
   
 add_action('parse_request', new_fb_login);
 function new_fb_login(){
   global $wp, $wpdb;
-  if($wp->request == 'loginFacebook'){
+  if($wp->request == 'loginFacebook' || isset($wp->query_vars['loginFacebook']) ){
     require(dirname(__FILE__).'/sdk/init.php');
     
     $user = $facebook->getUser();
@@ -59,12 +73,12 @@ function new_fb_login(){
       header( 'Location: '.$_GET['redirect'] ) ;
       exit;
     }else{
-      $loginUrl = $facebook->getLoginUrl(array('redirect_uri' => site_url('loginFacebook/doauth')) );
+      $loginUrl = $facebook->getLoginUrl(array('redirect_uri' => site_url().'?loginFacebookdoauth=1') );
       $_SESSION['redirect'] = isset($_GET['redirect']) ? $_GET['redirect'] : site_url();
       header( 'Location: '.$loginUrl ) ;
       exit;
     }
-  }elseif($wp->request == 'loginFacebook/doauth'){
+  }elseif($wp->request == 'loginFacebook/doauth' || isset($wp->query_vars['loginFacebookdoauth'])){
     require(dirname(__FILE__).'/sdk/init.php');
     $user = $facebook->getUser();
     if($user){
