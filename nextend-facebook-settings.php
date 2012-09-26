@@ -57,10 +57,10 @@ function NextendFB_Options_Page() {
   </p>
   <h3><?php _e('Usage', 'nextend-facebook-connect'); ?></h3>
   <h4><?php _e('Simple link', 'nextend-facebook-connect'); ?></h4>
-	<p><?php _e('&lt;a href="'.get_option('siteurl').'/loginFacebook?redirect='.get_option('siteurl').'" onclick="window.location = \''.get_option('siteurl').'/loginFacebook?redirect=\'+window.location.href; return false;"&gt;Click here to login or register with Facebook&lt;/a&gt;', 'nextend-facebook-connect'); ?></p>
+	<p><?php _e('&lt;a href="'.get_option('siteurl').'?loginFacebook=1&redirect='.get_option('siteurl').'" onclick="window.location = \''.get_option('siteurl').'?loginFacebook=1&redirect=\'+window.location.href; return false;"&gt;Click here to login or register with Facebook&lt;/a&gt;', 'nextend-facebook-connect'); ?></p>
 	
   <h4><?php _e('Image button', 'nextend-facebook-connect'); ?></h4>
-	<p><?php _e('&lt;a href="'.get_option('siteurl').'/loginFacebook?redirect='.get_option('siteurl').'" onclick="window.location = \''.get_option('siteurl').'/loginFacebook?redirect=\'+window.location.href; return false;"&gt; &lt;img src="HereComeTheImage" /&gt; &lt;/a&gt;', 'nextend-facebook-connect'); ?></p>
+	<p><?php _e('&lt;a href="'.get_option('siteurl').'?loginFacebook=1&redirect='.get_option('siteurl').'" onclick="window.location = \''.get_option('siteurl').'?loginFacebook=1&redirect=\'+window.location.href; return false;"&gt; &lt;img src="HereComeTheImage" /&gt; &lt;/a&gt;', 'nextend-facebook-connect'); ?></p>
   
   <h3><?php _e('Note', 'nextend-facebook-connect'); ?></h3>
   <p><?php _e('If the Facebook user\'s email address already used by another member of your site, the facebook profile will be automatically linked to the existing profile!', 'nextend-facebook-connect'); ?></p>
