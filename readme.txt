@@ -36,5 +36,8 @@ This plugins helps you create Facebook login and register buttons. The login and
 
 == Changelog ==
 
+= 1.3 =
+* Added linking option to the profile page, so an already registered user can easily link the profile with a Facebook profile.
+
 = 1.2 =
 * Fixed a bug when the htaccess short urls not enabled.
