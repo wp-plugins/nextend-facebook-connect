@@ -5,7 +5,7 @@ Requires at least: 3.0
 Tested up to: 3.4
 Stable tag: 1.3.0
 
-One click registration & login plugin for Facebook? Multiple stylish desing and easy installation? Is it totally free and comes with support? Yeah!
+One click registration & login plugin for Facebook? Easy installation? Is it totally free and comes with support? Yeah!
 
 == Description ==
 
