@@ -5,11 +5,20 @@ Requires at least: 3.0
 Tested up to: 3.4
 Stable tag: 1.3.0
 
-This plugins helps you create Facebook login and register buttons. The login and register process only takes one click.
+One click registration & login plugin for Facebook? Multiple stylish desing and easy installation? Is it totally free and comes with support? Yeah!
 
 == Description ==
 
-This plugins helps you create Facebook login and register buttons. The login and register process only takes one click and you can fully customize the buttons with images and other assets.
+Personally, I hate to fill out registration forms, waiting for confirmation e-mails, so we designed this plugin for our website. Now, we want to share this very usable plugin with everyone, for free! 
+Why should you choose Nextend Facebook Connect plugin from the many social plugins?
+* If your visitors have a facebook profiles, they can register your site with a single click, and later to log in too.
+* The previously registered users can simply attach their existing facebook profile to their account, so in the future, they can logging in with the one social button.
+* The plugin has multiple desings, so it fits all kind of websites smoothly and elegantly. - Soon
+* Very simple to use.
+* Fast and helpful support.
+* Totally free.
+
+Don’t forget to follow us on Facebook and Twitter!
 
 #### Usage
 
