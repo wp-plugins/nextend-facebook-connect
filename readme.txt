@@ -3,7 +3,7 @@ Contributors: nextendweb
 Tags: facebook, register, login, social connect, social, facebook connect
 Requires at least: 3.0
 Tested up to: 3.4
-Stable tag: 1.3.2
+Stable tag: 1.3.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -11,8 +11,9 @@ One click registration & login plugin for Facebook? Easy installation? Is it tot
 
 == Description ==
 
-Personally, I hate to fill out registration forms, waiting for confirmation e-mails, so we designed this plugin for our website. Now, we want to share this very usable plugin with everyone, for free! 
-Why should you choose Nextend Facebook Connect plugin from the many social plugins?
+Personally, I hate to fill out registration forms, waiting for confirmation e-mails, so we designed this plugin for our website. Now, we want to share this very usable plugin with everyone, for free!
+ 
+**Why should you choose Nextend Facebook Connect plugin from the many social plugins?**
 
 * If your visitors have a facebook profiles, they can register your site with a single click, and later to log in too.
 * The previously registered users can simply attach their existing facebook profile to their account, so in the future, they can logging in with the one social button.
