@@ -115,6 +115,14 @@ function NextendFB_Options_Page() {
 		<input type="text" name="fb_secret" value="<?php echo $nextend_fb_connect['fb_secret']; ?>" />
 		</td>
 		</tr>
+
+		<tr>
+		<th scope="row"><?php _e('New user prefix:', 'nextend-facebook-connect'); ?></th>
+		<td>
+    <?php if(!isset($nextend_fb_connect['fb_user_prefix'])) $nextend_fb_connect['fb_user_prefix'] = 'facebook-'; ?>
+		<input type="text" name="fb_user_prefix" value="<?php echo $nextend_fb_connect['fb_user_prefix']; ?>" />
+		</td>
+		</tr>
 	</table>
 
 	<p class="submit">
