@@ -23,11 +23,14 @@ License: GPL2
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+global $new_fb_settings;
 
 define( 'NEW_FB_LOGIN', 1 );
 if ( ! defined( 'NEW_FB_LOGIN_PLUGIN_BASENAME' ) )
 	define( 'NEW_FB_LOGIN_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
-  
+
+$new_fb_settings = maybe_unserialize(get_option('nextend_fb_connect'));
+              
 /*
   Sessions required for the profile notices 
 */
@@ -56,7 +59,7 @@ function nextend_fb_connect_stylesheet(){
 if(!isset($new_fb_settings['fb_load_style'])) $new_fb_settings['fb_load_style'] = 1;
 if($new_fb_settings['fb_load_style'])
   add_action( 'wp_enqueue_scripts', 'nextend_fb_connect_stylesheet' );
-  
+
 /*
   Creating the required table on installation
 */
@@ -92,7 +95,7 @@ add_filter('init', 'new_fb_add_query_var');
 ----------------------------------------------------------------------------- */
 add_action('parse_request', new_fb_login);
 function new_fb_login(){
-  global $wp, $wpdb;
+  global $wp, $wpdb, $new_fb_settings;
   if($wp->request == 'loginFacebook' || isset($wp->query_vars['loginFacebook']) ){
     require(dirname(__FILE__).'/sdk/init.php');
     
@@ -123,10 +126,10 @@ function new_fb_login(){
             $ID = email_exists($user_profile['email']);
             if($ID == false){ // Real register
               $random_password = wp_generate_password( $length=12, $include_standard_special_chars=false );
-              $settings = maybe_unserialize(get_option('nextend_fb_connect'));
               
-              if(!isset($settings['fb_user_prefix'])) $settings['fb_user_prefix'] = 'facebook-';
-              $ID = wp_create_user( 'Facebook - '.$settings['fb_user_prefix'], $random_password, $user_profile['email'] );
+              if(!isset($new_fb_settings['fb_user_prefix'])) $new_fb_settings['fb_user_prefix'] = 'facebook-';
+              $ID = wp_create_user( 'Facebook - '.$new_fb_settings['fb_user_prefix'], $random_password, $user_profile['email'] );
+              update_user_meta( $user_id, 'province', $_POST['province'] );
             }
             $wpdb->insert( 
             	$wpdb->prefix.'social_users', 
@@ -238,6 +241,54 @@ function new_add_fb_connect_field() {
 }
 add_action('profile_personal_options', 'new_add_fb_connect_field');
 
+function new_add_fb_login_form(){
+  ?>
+  <script>
+  var has_social_form = false;
+  var socialLogins = null;
+  jQuery(document).ready(function(){
+    (function($) {
+      if(!has_social_form){
+        has_social_form = true;
+        var loginForm = $('#loginform');
+        socialLogins = $('<div class="newsociallogins"><div style="clear:both;"></div></div>');
+        loginForm.prepend("<h3 style='text-align:center;'>OR</h3>");
+        loginForm.prepend(socialLogins);
+      }
+      socialLogins.prepend('<?php echo addslashes(new_fb_sign_button()); ?>');
+    }(jQuery));
+  });
+  </script>
+  <?php
+}
+
+add_action('login_form', 'new_add_fb_login_form');
+
+/*if(isset($new_fb_settings['fb_import_avatar']) && $new_fb_settings['fb_import_avatar']){
+	add_filter( 'get_avatar', 'new_fb_insert_avatar', 100, 5 );
+  
+  function new_fb_insert_avatar( $avatar, $id_or_email, $size, $default, $alt ) {	
+		
+    if ( strpos( $default, $this->url ) !== false ) {
+			$email = empty( $email ) ? 'nobody' : md5( $email );
+			
+			// 'www' version for WP2.9 and older
+			if ( strpos( $default, 'http://0.gravatar.com/avatar/') === 0 || strpos( $default, 'http://www.gravatar.com/avatar/') === 0 )
+				$avatar = str_replace( $default, 'asd'."&size={$size}x{$size}", $avatar );
+
+			//otherwise, just swap the placeholder with the hash
+			$avatar = str_replace( 'emailhash', $email, $avatar );
+			
+			//this is ugly, but has to be done
+			//make sure we pass the correct size params to the generated avatar
+			$avatar = str_replace( '%3F', "%3Fsize={$size}x{$size}%26", $avatar );
+			
+		}
+
+  file_put_contents(dirname(__FILE__).'/asd.txt', $avatar."\n",  FILE_APPEND);
+		return $avatar;
+	}
+}*/
 
 /* 
   Options Page 
@@ -268,6 +319,10 @@ function new_fb_plugin_action_links( $links, $file ) {
 /* -----------------------------------------------------------------------------
   Miscellaneous functions
 ----------------------------------------------------------------------------- */
+function new_fb_sign_button(){
+  return '<a href="'.new_fb_login_url().'">Sign in with Facebook</a><br />';
+}
+
 function new_fb_login_url(){
   return site_url('index.php').'?loginFacebook=1';
 }
