@@ -46,6 +46,18 @@ add_action('wp_logout', 'new_fb_end_session');
 add_action('wp_login', 'new_fb_end_session');
 
 /*
+  Loading style for buttons
+*/
+function nextend_fb_connect_stylesheet(){
+  wp_register_style( 'nextend_fb_connect_stylesheet', plugins_url('buttons/facebook-btn.css', __FILE__) );
+  wp_enqueue_style( 'nextend_fb_connect_stylesheet' );
+}
+
+if(!isset($new_fb_settings['fb_load_style'])) $new_fb_settings['fb_load_style'] = 1;
+if($new_fb_settings['fb_load_style'])
+  add_action( 'wp_enqueue_scripts', 'nextend_fb_connect_stylesheet' );
+  
+/*
   Creating the required table on installation
 */
 function nextend_fb_connect_install(){

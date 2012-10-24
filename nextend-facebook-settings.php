@@ -123,6 +123,15 @@ function NextendFB_Options_Page() {
 		<input type="text" name="fb_user_prefix" value="<?php echo $nextend_fb_connect['fb_user_prefix']; ?>" />
 		</td>
 		</tr>
+
+		<tr>
+		<th scope="row"><?php _e('Load button stylesheet:', 'nextend-facebook-connect'); ?></th>
+		<td>
+      <?php if(!isset($nextend_fb_connect['fb_load_style'])) $nextend_fb_connect['fb_load_style'] = 1; ?>
+		<input name="fb_load_style" id="fb_load_style_yes" value="1" type="radio" <?php if(isset($nextend_fb_connect['fb_load_style']) && $nextend_fb_connect['fb_load_style']){?> checked <?php } ?>> Yes  &nbsp;&nbsp;&nbsp;&nbsp;
+    <input name="fb_load_style" id="fb_load_style_no" value="0" type="radio" <?php if(isset($nextend_fb_connect['fb_load_style']) && $nextend_fb_connect['fb_load_style'] == 0){?> checked <?php } ?>> No		
+		</td>
+		</tr>
 	</table>
 
 	<p class="submit">
