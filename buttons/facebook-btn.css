@@ -1,7 +1,8 @@
 @import url(http://fonts.googleapis.com/css?family=Open+Sans:600);
 
 .new-fb-btn{
-  float: left;
+  margin: 5px auto;
+  display: inline-block;
 }
 
 .new-fb-btn,

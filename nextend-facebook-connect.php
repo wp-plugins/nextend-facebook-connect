@@ -57,8 +57,11 @@ function nextend_fb_connect_stylesheet(){
 }
 
 if(!isset($new_fb_settings['fb_load_style'])) $new_fb_settings['fb_load_style'] = 1;
-if($new_fb_settings['fb_load_style'])
+if($new_fb_settings['fb_load_style']){
   add_action( 'wp_enqueue_scripts', 'nextend_fb_connect_stylesheet' );
+  add_action( 'login_enqueue_scripts', 'nextend_fb_connect_stylesheet' );
+  add_action( 'admin_enqueue_scripts', 'nextend_fb_connect_stylesheet' );
+}  
 
 /*
   Creating the required table on installation
@@ -225,13 +228,10 @@ function new_add_fb_connect_field() {
     <tbody>
       <tr>	
         <th>
-          <label>Link Facebook with this profile</label>
         </th>	
         <td>
           <?php if(!new_fb_is_user_connected()): ?>
-            <a href="<?php echo new_fb_login_url().'&redirect='.site_url().$_SERVER["REQUEST_URI"]; ?>">Link Facebook with this profile</a>
-          <?php else: ?>
-          Already connected
+            <?php echo new_fb_link_button() ?>
           <?php endif; ?>
         </td>
       </tr>
@@ -251,7 +251,7 @@ function new_add_fb_login_form(){
       if(!has_social_form){
         has_social_form = true;
         var loginForm = $('#loginform');
-        socialLogins = $('<div class="newsociallogins"><div style="clear:both;"></div></div>');
+        socialLogins = $('<div class="newsociallogins" style="text-align: center;"><div style="clear:both;"></div></div>');
         loginForm.prepend("<h3 style='text-align:center;'>OR</h3>");
         loginForm.prepend(socialLogins);
       }
@@ -320,8 +320,15 @@ function new_fb_plugin_action_links( $links, $file ) {
   Miscellaneous functions
 ----------------------------------------------------------------------------- */
 function new_fb_sign_button(){
-  return '<a href="'.new_fb_login_url().'">Sign in with Facebook</a><br />';
+  global $new_fb_settings;
+  return '<a href="'.new_fb_login_url().'">'.$new_fb_settings['fb_login_button'].'</a><br />';
 }
+
+function new_fb_link_button(){
+  global $new_fb_settings;
+  return '<a href="'.new_fb_login_url().'&redirect='.site_url().$_SERVER["REQUEST_URI"].'">'.$new_fb_settings['fb_link_button'].'</a><br />';
+}
+
 
 function new_fb_login_url(){
   return site_url('index.php').'?loginFacebook=1';

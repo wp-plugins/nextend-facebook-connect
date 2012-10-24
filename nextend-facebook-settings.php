@@ -107,8 +107,8 @@ function NextendFB_Options_Page() {
 		<td>
 		<input type="text" name="fb_appid" value="<?php echo $nextend_fb_connect['fb_appid']; ?>" />
 		</td>
-		</tr>
-
+		</tr>  
+      
 		<tr>
 		<th scope="row"><?php _e('Facebook App Secret:', 'nextend-facebook-connect'); ?></th>
 		<td>
@@ -119,7 +119,7 @@ function NextendFB_Options_Page() {
 		<tr>
 		<th scope="row"><?php _e('New user prefix:', 'nextend-facebook-connect'); ?></th>
 		<td>
-    <?php if(!isset($nextend_fb_connect['fb_user_prefix'])) $nextend_fb_connect['fb_user_prefix'] = 'facebook-'; ?>
+    <?php if(!isset($nextend_fb_connect['fb_user_prefix'])) $nextend_fb_connect['fb_user_prefix'] = 'Facebook - '; ?>
 		<input type="text" name="fb_user_prefix" value="<?php echo $nextend_fb_connect['fb_user_prefix']; ?>" />
 		</td>
 		</tr>
@@ -130,6 +130,22 @@ function NextendFB_Options_Page() {
       <?php if(!isset($nextend_fb_connect['fb_load_style'])) $nextend_fb_connect['fb_load_style'] = 1; ?>
 		<input name="fb_load_style" id="fb_load_style_yes" value="1" type="radio" <?php if(isset($nextend_fb_connect['fb_load_style']) && $nextend_fb_connect['fb_load_style']){?> checked <?php } ?>> Yes  &nbsp;&nbsp;&nbsp;&nbsp;
     <input name="fb_load_style" id="fb_load_style_no" value="0" type="radio" <?php if(isset($nextend_fb_connect['fb_load_style']) && $nextend_fb_connect['fb_load_style'] == 0){?> checked <?php } ?>> No		
+		</td>
+		</tr>
+    
+    <tr>
+		<th scope="row"><?php _e('Login button:', 'nextend-facebook-connect'); ?></th>
+		<td>
+      <?php if(!isset($nextend_fb_connect['fb_login_button'])) $nextend_fb_connect['fb_login_button'] = '<div class="new-fb-btn new-fb-1 new-fb-default-anim"><div class="new-fb-1-1"><div class="new-fb-1-1-1">CONNECT WITH</div></div></div>'; ?>
+		  <textarea cols="83" rows="3" name="fb_login_button"><?php echo $nextend_fb_connect['fb_login_button']; ?></textarea>
+		</td>
+		</tr>
+    
+    <tr>
+		<th scope="row"><?php _e('Link account button:', 'nextend-facebook-connect'); ?></th>
+		<td>
+      <?php if(!isset($nextend_fb_connect['fb_link_button'])) $nextend_fb_connect['fb_link_button'] = '<div class="new-fb-btn new-fb-1 new-fb-default-anim"><div class="new-fb-1-1"><div class="new-fb-1-1-1">LINK ACCOUNT TO</div></div></div>'; ?>
+		  <textarea cols="83" rows="3" name="fb_link_button"><?php echo $nextend_fb_connect['fb_link_button']; ?></textarea>
 		</td>
 		</tr>
 	</table>
