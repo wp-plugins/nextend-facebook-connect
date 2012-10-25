@@ -129,10 +129,11 @@ function new_fb_login(){
             $ID = email_exists($user_profile['email']);
             if($ID == false){ // Real register
               $random_password = wp_generate_password( $length=12, $include_standard_special_chars=false );
+              $settings = maybe_unserialize(get_option('nextend_fb_connect'));
               
-              if(!isset($new_fb_settings['fb_user_prefix'])) $new_fb_settings['fb_user_prefix'] = 'facebook-';
-              $ID = wp_create_user( 'Facebook - '.$new_fb_settings['fb_user_prefix'], $random_password, $user_profile['email'] );
-              update_user_meta( $user_id, 'province', $_POST['province'] );
+              if(!isset($settings['fb_user_prefix'])) $settings['fb_user_prefix'] = 'facebook-';
+              if(!isset($user_profile['email'])) $user_profile['email'] = $user_profile['id'].'@facebook.com';
+              $ID = wp_create_user( $settings['fb_user_prefix'].$user_profile['name'], $random_password, $user_profile['email'] );
             }
             $wpdb->insert( 
             	$wpdb->prefix.'social_users', 
@@ -151,6 +152,7 @@ function new_fb_login(){
           
           if($ID){ // Login
             wp_set_auth_cookie($ID, true, false);
+            do_action('wp_login', $settings['fb_user_prefix'].$user_profile['name']);
             header( 'Location: '.$_SESSION['redirect'] );
             unset($_SESSION['redirect']);
             exit;
