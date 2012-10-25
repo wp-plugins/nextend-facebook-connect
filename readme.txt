@@ -3,13 +3,17 @@ Contributors: nextendweb
 Tags: facebook, register, login, social connect, social, facebook connect
 Requires at least: 3.0
 Tested up to: 3.4
-Stable tag: 1.3.6
+Stable tag: 1.3.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 One click registration & login plugin for Facebook? Easy installation? Is it totally free and comes with support? Yeah!
 
 == Description ==
+
+Check the [DEMO](http://www.nextendweb.com/wp-login.php) on our site.
+
+Also we created a [Social Connect button generator](http://www.nextendweb.com/social-connect-button-generator) which work with this plugin fine. This allows you to create fancy login buttons. 
 
 Personally, I hate to fill out registration forms, waiting for confirmation e-mails, so we designed this plugin for our website. Now, we want to share this very usable plugin with everyone, for free!
  
@@ -46,6 +50,12 @@ Don’t forget to follow us on Facebook and Twitter!
 7.  Click on Website with Facebook Login tab abd fill out Site URL field with: http://yoursiteurl.com
 8.  Click on Save changes and the top of the page contains the App Id and App secret which you have to copy and past below.
 9.  Save changes!
+
+
+== Screenshots ==
+
+1. Our Social Connect plugins on the main WP login page
+2. Our Social Connect plugins in the profile page for account linking
 
 == Changelog ==
 
