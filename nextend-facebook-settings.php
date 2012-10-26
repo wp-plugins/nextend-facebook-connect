@@ -76,8 +76,12 @@ function NextendFB_Options_Page() {
 	<div id="newfb-about" class="postbox">
 	<h3 class="hndle"><?php _e('About this plugin', 'nextend-facebook-connect'); ?></h3>
 	<div class="inside"><ul>
-	<li><a href="http://wordpress.org/extend/plugins/nextend-facebook-connect/"><?php _e('Plugin URI', 'nextend-facebook-connect'); ?></a></li>
-	<li><a href="http://profiles.wordpress.org/nextendweb" target="_blank"><?php _e('Author URI', 'nextend-facebook-connect'); ?></a></li>
+  
+  <li><a href="http://www.nextendweb.com/social-connect-plugins-for-wordpress.html" target="_blank"><?php _e('Check the realted <b>blog post</b>!', 'nextend-facebook-connect'); ?></a></li>
+	<li><br></li>
+	<li><a href="http://wordpress.org/extend/plugins/nextend-facebook-connect/" target="_blank"><?php _e('Nextend Facebook Connect', 'nextend-facebook-connect'); ?></a></li>
+	<li><br></li>
+  <li><a href="http://profiles.wordpress.org/nextendweb" target="_blank"><?php _e('Nextend  plugins at WordPress.org', 'nextend-facebook-connect'); ?></a></li>
 	</ul></div>
 	</div>
 	<!--about end-->
@@ -147,6 +151,12 @@ function NextendFB_Options_Page() {
       <?php if(!isset($nextend_fb_connect['fb_link_button'])) $nextend_fb_connect['fb_link_button'] = '<div class="new-fb-btn new-fb-1 new-fb-default-anim"><div class="new-fb-1-1"><div class="new-fb-1-1-1">LINK ACCOUNT TO</div></div></div>'; ?>
 		  <textarea cols="83" rows="3" name="fb_link_button"><?php echo $nextend_fb_connect['fb_link_button']; ?></textarea>
 		</td>
+		</tr>
+    <tr>
+		<th scope="row"></th>
+		<td>
+    <a href="http://www.nextendweb.com/social-connect-button-generator" target="_blank"><img style="margin-left: -4px;" src="<?php echo plugins_url('generatorbanner.png', __FILE__); ?>" /></a>
+    </td>
 		</tr>
 	</table>
 
