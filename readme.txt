@@ -31,6 +31,7 @@ Don’t forget to follow us on Facebook and Twitter!
 #### Usage
 
 After you activated the plugin, the plugin will autmatically 
+
 * add the login buttons to the WordPress login page. See screenshot #1
 * add the account linking buttons to the WordPress profile page. See screenshot #2
 
