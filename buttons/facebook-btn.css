@@ -385,7 +385,7 @@ div.new-fb-14:HOVER div.new-fb-14-1{
 */
 
 .new-fb-default-anim{
-  opacity: 0.79;
+  opacity: 0.85;
   transition: opacity 0.4s;
   -moz-transition: opacity 0.4s; /* Firefox 4 */
   -webkit-transition: opacity 0.4s; /* Safari and Chrome */
