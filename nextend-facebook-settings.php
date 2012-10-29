@@ -7,6 +7,9 @@ $newfb_status = "normal";
 
 if(isset($_POST['newfb_update_options'])) {
 	if($_POST['newfb_update_options'] == 'Y') {
+    foreach($_POST AS $k => $v){
+      $_POST[$k] = stripslashes($v);
+    }
 		update_option("nextend_fb_connect", maybe_serialize($_POST));
 		$newfb_status = 'update_success';
 	}
