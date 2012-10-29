@@ -129,6 +129,14 @@ function NextendFB_Options_Page() {
 		</tr>
 
 		<tr>
+		<th scope="row"><?php _e('Fix redirect url:', 'nextend-facebook-connect'); ?></th>
+		<td>
+    <?php if(!isset($nextend_fb_connect['fb_redirect'])) $nextend_fb_connect['fb_redirect'] = 'auto'; ?>
+		<input type="text" name="fb_redirect" value="<?php echo $nextend_fb_connect['fb_redirect']; ?>" />
+		</td>
+		</tr>
+
+		<tr>
 		<th scope="row"><?php _e('Load button stylesheet:', 'nextend-facebook-connect'); ?></th>
 		<td>
       <?php if(!isset($nextend_fb_connect['fb_load_style'])) $nextend_fb_connect['fb_load_style'] = 1; ?>

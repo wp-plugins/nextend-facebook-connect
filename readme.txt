@@ -1,9 +1,10 @@
 === Nextend Facebook Connect ===
 Contributors: nextendweb 
 Tags: facebook, register, login, social connect, social, facebook connect
+Donate link: https://www.facebook.com/nextendweb
 Requires at least: 3.0
 Tested up to: 3.4
-Stable tag: 1.4.3
+Stable tag: 1.4.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -13,7 +14,7 @@ One click registration & login plugin for Facebook? Easy installation? Is it tot
 
 Check the [DEMO](http://www.nextendweb.com/wp-login.php) on our site.
 
-Also we created a [Social Connect button generator](http://www.nextendweb.com/social-connect-button-generator) which work with this plugin fine. This allows you to create fancy login buttons. 
+Also we created a [Social Connect button generator](http://www.nextendweb.com/social-connect-button-generator) for this plugin. This allows you to create fancy login buttons. 
 
 Personally, I hate to fill out registration forms, waiting for confirmation e-mails, so we designed this plugin for our website. Now, we want to share this very usable plugin with everyone, for free!
  
@@ -26,7 +27,7 @@ Personally, I hate to fill out registration forms, waiting for confirmation e-ma
 * Fast and helpful support.
 * Totally free.
 
-Don’t forget to follow us on Facebook and Twitter!
+If you like our stuff donate a like to our [Facebook page](https://www.facebook.com/nextendweb) or follow us on [Twitter](https://www.facebook.com/nextendweb) 
 
 #### Usage
 
@@ -65,6 +66,16 @@ After you activated the plugin, the plugin will autmatically
 2. Our Social Connect plugins in the profile page for account linking
 
 == Changelog ==
+
+= 1.4.4 =
+* Modified login redirect issue for wp-login.php - author Michel Weimerskirch
+* Added fix redirect url support. If you leave it empty or "auto" it will try to redirect back the user to the last visited page. 
+
+= 1.4.3 =
+* Facebook Certification bugfix
+ 
+= 1.4 =
+* Added Social button generator support
 
 = 1.3 =
 * Added linking option to the profile page, so an already registered user can easily link the profile with a Facebook profile.
