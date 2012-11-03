@@ -67,6 +67,9 @@ After you activated the plugin, the plugin will autmatically
 
 == Changelog ==
 
+= 1.4.11 =
+* Added a fix when Facebook class already loaded
+
 = 1.4.10 =
 * Added editProfileRedirect parameter for buddypress edit profile redirect. Usage: siteurl?editProfileRedirect=1
 
