@@ -3,7 +3,7 @@
 Plugin Name: Nextend Facebook Connect
 Plugin URI: http://nextendweb.com/
 Description: This plugins helps you create Facebook login and register buttons. The login and register process only takes one click.
-Version: 1.4.14
+Version: 1.4.15
 Author: Roland Soos
 License: GPL2
 */
@@ -109,7 +109,7 @@ function new_fb_login(){
       header( 'Location: '.$_GET['redirect'] ) ;
       exit;
     }else{
-      $loginUrl = $facebook->getLoginUrl(array('redirect_uri' => site_url('index.php').'?loginFacebookdoauth=1') );
+      $loginUrl = $facebook->getLoginUrl(array('redirect_uri' => site_url('index.php').'?loginFacebookdoauth=1', 'scope' => 'email') );
       if(isset($new_fb_settings['fb_redirect']) && $new_fb_settings['fb_redirect'] != '' && $new_fb_settings['fb_redirect'] != 'auto'){
         $_GET['redirect'] = $new_fb_settings['fb_redirect'];
       }
@@ -140,11 +140,10 @@ function new_fb_login(){
             if($ID == false){ // Real register
               require_once( ABSPATH . WPINC . '/registration.php');
               $random_password = wp_generate_password( $length=12, $include_standard_special_chars=false );
-              $settings = maybe_unserialize(get_option('nextend_fb_connect'));
               
-              if(!isset($settings['fb_user_prefix'])) $settings['fb_user_prefix'] = 'facebook-';
+              if(!isset($new_fb_settings['fb_user_prefix'])) $new_fb_settings['fb_user_prefix'] = 'facebook-';
               if(!isset($user_profile['email'])) $user_profile['email'] = $user_profile['username'].'@facebook.com';
-              $ID = wp_create_user( $settings['fb_user_prefix'].$user_profile['username'], $random_password, $user_profile['email'] );
+              $ID = wp_create_user( $new_fb_settings['fb_user_prefix'].$user_profile['username'], $random_password, $user_profile['email'] );
               wp_update_user(array(
                 'ID' => $ID, 
                 'display_name' => $user_profile['name'], 
@@ -165,6 +164,9 @@ function new_fb_login(){
                 '%s'
             	) 
             );
+            if(isset($new_fb_settings['fb_redirect_reg']) && $new_fb_settings['fb_redirect_reg'] != '' && $new_fb_settings['fb_redirect_reg'] != 'auto'){
+              $_SESSION['redirect'] = $new_fb_settings['fb_redirect_reg'];
+            }
           }
           
           if($ID){ // Login

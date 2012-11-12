@@ -4,7 +4,7 @@ Tags: facebook, register, login, social connect, social, facebook connect
 Donate link: https://www.facebook.com/nextendweb
 Requires at least: 3.0
 Tested up to: 3.4
-Stable tag: 1.4.14
+Stable tag: 1.4.15
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -66,6 +66,10 @@ After you activated the plugin, the plugin will autmatically
 2. Our Social Connect plugins in the profile page for account linking
 
 == Changelog ==
+
+= 1.4.15 =
+* Email fix
+* Added the option for different redirect for Login and Registration
 
 = 1.4.14 =
 * Login page jQuery fix

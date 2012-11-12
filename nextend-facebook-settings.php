@@ -132,10 +132,18 @@ function NextendFB_Options_Page() {
 		</tr>
 
 		<tr>
-		<th scope="row"><?php _e('Fixed redirect url:', 'nextend-facebook-connect'); ?></th>
+		<th scope="row"><?php _e('Fixed redirect url for login:', 'nextend-facebook-connect'); ?></th>
 		<td>
     <?php if(!isset($nextend_fb_connect['fb_redirect'])) $nextend_fb_connect['fb_redirect'] = 'auto'; ?>
 		<input type="text" name="fb_redirect" value="<?php echo $nextend_fb_connect['fb_redirect']; ?>" />
+		</td>
+		</tr>
+
+		<tr>
+		<th scope="row"><?php _e('Fixed redirect url for register:', 'nextend-facebook-connect'); ?></th>
+		<td>
+    <?php if(!isset($nextend_fb_connect['fb_redirect_reg'])) $nextend_fb_connect['fb_redirect_reg'] = 'auto'; ?>
+		<input type="text" name="fb_redirect_reg" value="<?php echo $nextend_fb_connect['fb_redirect_reg']; ?>" />
 		</td>
 		</tr>
 
