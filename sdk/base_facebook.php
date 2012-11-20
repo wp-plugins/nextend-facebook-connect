@@ -27,6 +27,7 @@ if (!function_exists('json_decode')) {
  *
  * @author Naitik Shah <naitik@facebook.com>
  */
+if(!class_exists('FacebookApiException')){
 class FacebookApiException extends Exception
 {
   /**
@@ -105,6 +106,7 @@ class FacebookApiException extends Exception
     return $str . $this->message;
   }
 }
+}
 
 /**
  * Provides access to the Facebook Platform.  This class provides
@@ -115,6 +117,7 @@ class FacebookApiException extends Exception
  *
  * @author Naitik Shah <naitik@facebook.com>
  */
+ if(!class_exists('BaseFacebook')){
 abstract class BaseFacebook
 {
   /**
@@ -1422,4 +1425,5 @@ abstract class BaseFacebook
    * @return void
    */
   abstract protected function clearAllPersistentData();
+}
 }
