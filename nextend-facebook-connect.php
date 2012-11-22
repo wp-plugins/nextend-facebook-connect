@@ -3,7 +3,7 @@
 Plugin Name: Nextend Facebook Connect
 Plugin URI: http://nextendweb.com/
 Description: This plugins helps you create Facebook login and register buttons. The login and register process only takes one click.
-Version: 1.4.18
+Version: 1.4.19
 Author: Roland Soos
 License: GPL2
 */
@@ -150,6 +150,7 @@ function new_fb_login(){
                 'first_name' => $user_profile['first_name'], 
                 'last_name' => $user_profile['last_name']
               ));
+              update_user_meta( $ID, 'fb_profile_picture', 'https://graph.facebook.com/'.$user_profile['id'].'/picture?type=large');
             }
             $wpdb->insert( 
             	$wpdb->prefix.'social_users', 
@@ -287,31 +288,23 @@ function new_add_fb_login_form(){
 add_action('login_form', 'new_add_fb_login_form');
 add_action('register_form', 'new_add_fb_login_form');
 
-/*if(isset($new_fb_settings['fb_import_avatar']) && $new_fb_settings['fb_import_avatar']){
-	add_filter( 'get_avatar', 'new_fb_insert_avatar', 100, 5 );
-  
-  function new_fb_insert_avatar( $avatar, $id_or_email, $size, $default, $alt ) {	
-		
-    if ( strpos( $default, $this->url ) !== false ) {
-			$email = empty( $email ) ? 'nobody' : md5( $email );
-			
-			// 'www' version for WP2.9 and older
-			if ( strpos( $default, 'http://0.gravatar.com/avatar/') === 0 || strpos( $default, 'http://www.gravatar.com/avatar/') === 0 )
-				$avatar = str_replace( $default, 'asd'."&size={$size}x{$size}", $avatar );
+add_filter( 'get_avatar', 'new_fb_insert_avatar', 1, 5 );
+function new_fb_insert_avatar( $avatar, $id_or_email, $size, $default, $alt ) {
+  $id = 0;	
+  if(is_numeric($id_or_email)){
+    $id = $id_or_email;
+  }else if(is_string($id_or_email)){
+    $id = get_user_id_from_string($id_or_email);
+  }else if(is_object($id_or_email)){
+    $id = $id_or_email->user_id;
+  }
+  if($id == 0) return $avatar;
 
-			//otherwise, just swap the placeholder with the hash
-			$avatar = str_replace( 'emailhash', $email, $avatar );
-			
-			//this is ugly, but has to be done
-			//make sure we pass the correct size params to the generated avatar
-			$avatar = str_replace( '%3F', "%3Fsize={$size}x{$size}%26", $avatar );
-			
-		}
-
-  file_put_contents(dirname(__FILE__).'/asd.txt', $avatar."\n",  FILE_APPEND);
-		return $avatar;
-	}
-}*/
+  $pic = get_user_meta($id, 'fb_profile_picture', true);
+  if(!$pic || $pic == '') return $avatar;
+  $avatar = preg_replace('/src=("|\').*?("|\')/i', 'src="'.$pic.'"', $avatar);
+  return $avatar;
+}
 
 /* 
   Options Page 

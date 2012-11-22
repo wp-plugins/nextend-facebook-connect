@@ -4,7 +4,7 @@ Tags: facebook, register, login, social connect, social, facebook connect
 Donate link: https://www.facebook.com/nextendweb
 Requires at least: 3.0
 Tested up to: 3.4
-Stable tag: 1.4.18
+Stable tag: 1.4.19
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -22,10 +22,10 @@ Personally, I hate to fill out registration forms, waiting for confirmation e-ma
 
 * If your visitors have a Facebook profile, they can register your site with a single click, and later to log in too.
 * The previously registered users can simply attach their existing Facebook profile to their account, so in the future, they can logging in with the one social button.
-* The plugin has multiple desings, so it fits all kind of websites smoothly and elegantly. - Soon
+* The plugin has multiple desings, so it fits all kind of websites smoothly and elegantly.
+* The plugin supports Facebook profile picture as avatar. 
 * Very simple to use.
 * Fast and helpful support.
-* Totally free.
 
 If you like our stuff donate a like to our [Facebook page](https://www.facebook.com/nextendweb) or follow us on [Twitter](https://twitter.com/nextendweb)!
 
@@ -66,6 +66,9 @@ After you activated the plugin, the plugin will autmatically
 2. Our Social Connect plugins in the profile page for account linking
 
 == Changelog ==
+
+= 1.4.19 =
+* Added profile picture support for avatars
 
 = 1.4.18 =
 * Fixed SDK loading
