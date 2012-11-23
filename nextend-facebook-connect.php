@@ -3,7 +3,7 @@
 Plugin Name: Nextend Facebook Connect
 Plugin URI: http://nextendweb.com/
 Description: This plugins helps you create Facebook login and register buttons. The login and register process only takes one click.
-Version: 1.4.20
+Version: 1.4.21
 Author: Roland Soos
 License: GPL2
 */
@@ -126,12 +126,12 @@ function new_fb_login(){
         // Proceed knowing you have a logged in user who's authenticated.
         $user_profile = $facebook->api('/me');
         $ID = $wpdb->get_var($wpdb->prepare('
-          SELECT ID FROM '.$wpdb->prefix.'social_users WHERE type = "fb" AND identifier = "'.$user_profile['id'].'"
-        '));
+          SELECT ID FROM '.$wpdb->prefix.'social_users WHERE type = "fb" AND identifier = "%d"
+        ',$user_profile['id']));
         if(!get_user_by('id',$ID)){
           $wpdb->query($wpdb->prepare('
-            DELETE FROM '.$wpdb->prefix.'social_users WHERE ID = "'.$ID.'"
-          '));
+            DELETE FROM '.$wpdb->prefix.'social_users WHERE ID = "%d"
+          ', $ID));
           $ID = null;
         }
         if(!is_user_logged_in()){
@@ -229,8 +229,8 @@ function new_fb_is_user_connected(){
   global $wpdb;
   $current_user = wp_get_current_user();
   $ID = $wpdb->get_var($wpdb->prepare('
-    SELECT ID FROM '.$wpdb->prefix.'social_users WHERE type = "fb" AND ID = "'.$current_user->ID.'"
-  '));
+    SELECT ID FROM '.$wpdb->prefix.'social_users WHERE type = "fb" AND ID = "%d"
+  ', $current_user->ID));
   if($ID === NULL) return false;
   return true;
 }
