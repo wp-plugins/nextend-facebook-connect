@@ -3,7 +3,7 @@
 Plugin Name: Nextend Facebook Connect
 Plugin URI: http://nextendweb.com/
 Description: This plugins helps you create Facebook login and register buttons. The login and register process only takes one click.
-Version: 1.4.21
+Version: 1.4.23
 Author: Roland Soos
 License: GPL2
 */
@@ -136,35 +136,39 @@ function new_fb_login(){
         }
         if(!is_user_logged_in()){
           if($ID == NULL){ // Register
+            if(!isset($user_profile['email'])) $user_profile['email'] = $user_profile['username'].'@facebook.com';
             $ID = email_exists($user_profile['email']);
             if($ID == false){ // Real register
               require_once( ABSPATH . WPINC . '/registration.php');
               $random_password = wp_generate_password( $length=12, $include_standard_special_chars=false );
               
               if(!isset($new_fb_settings['fb_user_prefix'])) $new_fb_settings['fb_user_prefix'] = 'facebook-';
-              if(!isset($user_profile['email'])) $user_profile['email'] = $user_profile['username'].'@facebook.com';
               $ID = wp_create_user( $new_fb_settings['fb_user_prefix'].$user_profile['username'], $random_password, $user_profile['email'] );
-              wp_update_user(array(
-                'ID' => $ID, 
-                'display_name' => $user_profile['name'], 
-                'first_name' => $user_profile['first_name'], 
-                'last_name' => $user_profile['last_name']
-              ));
-              update_user_meta( $ID, 'fb_profile_picture', 'https://graph.facebook.com/'.$user_profile['id'].'/picture?type=large');
+              if($ID){
+                wp_update_user(array(
+                  'ID' => $ID, 
+                  'display_name' => $user_profile['name'], 
+                  'first_name' => $user_profile['first_name'], 
+                  'last_name' => $user_profile['last_name']
+                ));
+                update_user_meta( $ID, 'fb_profile_picture', 'https://graph.facebook.com/'.$user_profile['id'].'/picture?type=large');
+              }
             }
-            $wpdb->insert( 
-            	$wpdb->prefix.'social_users', 
-            	array( 
-            		'ID' => $ID, 
-            		'type' => 'fb',
-                'identifier' => $user_profile['id']
-            	), 
-            	array( 
-            		'%d', 
-            		'%s',
-                '%s'
-            	) 
-            );
+            if($ID){
+              $wpdb->insert( 
+              	$wpdb->prefix.'social_users', 
+              	array( 
+              		'ID' => $ID, 
+              		'type' => 'fb',
+                  'identifier' => $user_profile['id']
+              	), 
+              	array( 
+              		'%d', 
+              		'%s',
+                  '%s'
+              	) 
+              );
+            }
             if(isset($new_fb_settings['fb_redirect_reg']) && $new_fb_settings['fb_redirect_reg'] != '' && $new_fb_settings['fb_redirect_reg'] != 'auto'){
               $_SESSION['redirect'] = $new_fb_settings['fb_redirect_reg'];
             }
@@ -229,10 +233,10 @@ function new_fb_is_user_connected(){
   global $wpdb;
   $current_user = wp_get_current_user();
   $ID = $wpdb->get_var($wpdb->prepare('
-    SELECT ID FROM '.$wpdb->prefix.'social_users WHERE type = "fb" AND ID = "%d"
+    SELECT identifier FROM '.$wpdb->prefix.'social_users WHERE type = "fb" AND ID = "%d"
   ', $current_user->ID));
   if($ID === NULL) return false;
-  return true;
+  return $ID;
 }
 
 /*
@@ -289,7 +293,7 @@ add_action('login_form', 'new_add_fb_login_form');
 add_action('register_form', 'new_add_fb_login_form');
 
 add_filter( 'get_avatar', 'new_fb_insert_avatar', 1, 5 );
-function new_fb_insert_avatar( $avatar, $id_or_email, $size, $default, $alt ) {
+function new_fb_insert_avatar( $avatar = '', $id_or_email, $size = 96, $default = '', $alt = false ) {
   $id = 0;	
   if(is_numeric($id_or_email)){
     $id = $id_or_email;
