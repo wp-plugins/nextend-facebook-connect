@@ -940,8 +940,6 @@ abstract class BaseFacebook
     $result = curl_exec($ch);
 
     if (curl_errno($ch) == 60) { // CURLE_SSL_CACERT
-      self::errorLog('Invalid or no certificate authority found, '.
-                     'using bundled information');
       curl_setopt($ch, CURLOPT_CAINFO,
                   dirname(__FILE__) . '/fb_ca_chain_bundle.crt');
       $result = curl_exec($ch);
