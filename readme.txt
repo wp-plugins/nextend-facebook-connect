@@ -68,7 +68,6 @@ After you activated the plugin, the plugin will autmatically
 == Changelog ==
 
 = 1.4.26 =
-* Avatar support added
 * Added e-mail notification on registration
 
 = 1.4.25 =
