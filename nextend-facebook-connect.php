@@ -3,7 +3,7 @@
 Plugin Name: Nextend Facebook Connect
 Plugin URI: http://nextendweb.com/
 Description: This plugins helps you create Facebook login and register buttons. The login and register process only takes one click.
-Version: 1.4.28
+Version: 1.4.29
 Author: Roland Soos
 License: GPL2
 */
@@ -108,19 +108,7 @@ function new_fb_login(){
     if ($user && is_user_logged_in() && new_fb_is_user_connected()) {
       header( 'Location: '.$_GET['redirect'] ) ;
       exit;
-    }else{
-      $loginUrl = $facebook->getLoginUrl(array('redirect_uri' => site_url('index.php').'?loginFacebookdoauth=1', 'scope' => 'email') );
-      if(isset($new_fb_settings['fb_redirect']) && $new_fb_settings['fb_redirect'] != '' && $new_fb_settings['fb_redirect'] != 'auto'){
-        $_GET['redirect'] = $new_fb_settings['fb_redirect'];
-      }
-      $_SESSION['redirect'] = isset($_GET['redirect']) ? $_GET['redirect'] : site_url();
-      header( 'Location: '.$loginUrl ) ;
-      exit;
-    }
-  }elseif($wp->request == 'loginFacebook/doauth' || isset($wp->query_vars['loginFacebookdoauth'])){
-    require(dirname(__FILE__).'/sdk/init.php');
-    $user = $facebook->getUser();
-    if($user){
+    }elseif($user){
       // Register or Login
       try {
         // Proceed knowing you have a logged in user who's authenticated.
@@ -234,7 +222,12 @@ function new_fb_login(){
       }
       exit;
     }else{
-      echo "There was an error with the FB auth!\n";
+      $loginUrl = $facebook->getLoginUrl(array('scope' => 'email') );
+      if(isset($new_fb_settings['fb_redirect']) && $new_fb_settings['fb_redirect'] != '' && $new_fb_settings['fb_redirect'] != 'auto'){
+        $_GET['redirect'] = $new_fb_settings['fb_redirect'];
+      }
+      $_SESSION['redirect'] = isset($_GET['redirect']) ? $_GET['redirect'] : site_url();
+      header( 'Location: '.$loginUrl ) ;
       exit;
     }
   }
