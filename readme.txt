@@ -4,7 +4,7 @@ Tags: facebook, register, login, social connect, social, facebook connect
 Donate link: https://www.facebook.com/nextendweb
 Requires at least: 3.0
 Tested up to: 3.4
-Stable tag: 1.4.31
+Stable tag: 1.4.32
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -41,11 +41,11 @@ After you activated the plugin, the plugin will autmatically
 
 **Simple link**
 
-&lt;a href="*siteurl*?loginFacebook=1&redirect=*siteurl*" onclick="window.location = \'*siteurl*?loginFacebook=1&redirect=\'+window.location.href; return false;"&gt;Click here to login or register with Facebook&lt;/a&gt;
+&lt;a href="*siteurl*/wp-login.php?loginFacebook=1&redirect=*siteurl*" onclick="window.location = \'*siteurl*/wp-login.php?loginFacebook=1&redirect=\'+window.location.href; return false;"&gt;Click here to login or register with Facebook&lt;/a&gt;
 
 **Image button**
 
-&lt;a href="*siteurl*?loginFacebook=1&redirect=*siteurl*" onclick="window.location = \'*siteurl*?loginFacebook=1&redirect=\'+window.location.href; return false;"&gt; &lt;img src="HereComeTheImage" /&gt; &lt;/a&gt;
+&lt;a href="*siteurl*/wp-login.php?loginFacebook=1&redirect=*siteurl*" onclick="window.location = \'*siteurl*/wp-login.php?loginFacebook=1&redirect=\'+window.location.href; return false;"&gt; &lt;img src="HereComeTheImage" /&gt; &lt;/a&gt;
 
 == Installation ==
 
@@ -67,7 +67,7 @@ After you activated the plugin, the plugin will autmatically
 
 == Changelog ==
 
-= 1.4.31 =
+= 1.4.32 =
 * Official SSL support added - Thanks for Chin for the help
 
 = 1.4.29 =
