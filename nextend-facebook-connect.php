@@ -3,7 +3,7 @@
 Plugin Name: Nextend Facebook Connect
 Plugin URI: http://nextendweb.com/
 Description: This plugins helps you create Facebook login and register buttons. The login and register process only takes one click.
-Version: 1.4.29
+Version: 1.4.30
 Author: Roland Soos
 License: GPL2
 */
@@ -97,104 +97,90 @@ add_filter('init', 'new_fb_add_query_var');
 /* -----------------------------------------------------------------------------
   Main function to handle the Sign in/Register/Linking process
 ----------------------------------------------------------------------------- */
-add_action('parse_request', new_fb_login);
-function new_fb_login(){
-  global $wp, $wpdb, $new_fb_settings;
+
+/*
+  Compatibility for older versions
+*/
+add_action('parse_request', new_fb_login_compat);
+function new_fb_login_compat(){
+  global $wp;
   if($wp->request == 'loginFacebook' || isset($wp->query_vars['loginFacebook']) ){
-    require(dirname(__FILE__).'/sdk/init.php');
-    
-    $user = $facebook->getUser();
-    
-    if ($user && is_user_logged_in() && new_fb_is_user_connected()) {
-      header( 'Location: '.$_GET['redirect'] ) ;
-      exit;
-    }elseif($user){
-      // Register or Login
-      try {
-        // Proceed knowing you have a logged in user who's authenticated.
-        $user_profile = $facebook->api('/me');
-        $ID = $wpdb->get_var($wpdb->prepare('
-          SELECT ID FROM '.$wpdb->prefix.'social_users WHERE type = "fb" AND identifier = "%d"
-        ',$user_profile['id']));
-        if(!get_user_by('id',$ID)){
-          $wpdb->query($wpdb->prepare('
-            DELETE FROM '.$wpdb->prefix.'social_users WHERE ID = "%d"
-          ', $ID));
-          $ID = null;
-        }
-        if(!is_user_logged_in()){
-          if($ID == NULL){ // Register
-            if(!isset($user_profile['email'])) $user_profile['email'] = $user_profile['username'].'@facebook.com';
-            $ID = email_exists($user_profile['email']);
-            if($ID == false){ // Real register
-              require_once( ABSPATH . WPINC . '/registration.php');
-              $random_password = wp_generate_password( $length=12, $include_standard_special_chars=false );
-              
-              if(!isset($new_fb_settings['fb_user_prefix'])) $new_fb_settings['fb_user_prefix'] = 'facebook-';
-              $sanitized_user_login = sanitize_user($new_fb_settings['fb_user_prefix'].$user_profile['username']);
-              if(!validate_username($sanitized_user_login)){
-                $sanitized_user_login = sanitize_user('facebook'.$user_profile['id']);
-              }
-              $defaul_user_name = $sanitized_user_login;
-              $i = 1;
-              while(username_exists($sanitized_user_login)){
-                $sanitized_user_login = $defaul_user_name.$i;
-                $i++;
-              }
-              
-              $ID = wp_create_user($sanitized_user_login, $random_password, $user_profile['email'] );
-              if(!is_wp_error($ID)){
-              	wp_new_user_notification($ID, $random_password);
-                wp_update_user(array(
-                  'ID' => $ID, 
-                  'display_name' => $user_profile['name'], 
-                  'first_name' => $user_profile['first_name'], 
-                  'last_name' => $user_profile['last_name']
-                ));
-                update_user_meta( $ID, 'fb_profile_picture', 'https://graph.facebook.com/'.$user_profile['id'].'/picture?type=large');
-              }else{
-                return;
-              }
+    new_fb_login_action();
+  }
+}
+
+/*
+  For login page
+*/
+add_action('login_init', new_fb_login);
+function new_fb_login(){
+  if($_REQUEST['loginFacebook'] == '1'){
+    new_fb_login_action();
+  }
+}
+
+function new_fb_login_action(){
+  global $wp, $wpdb, $new_fb_settings;
+  require(dirname(__FILE__).'/sdk/init.php');
+  
+  $user = $facebook->getUser();
+  
+  if ($user && is_user_logged_in() && new_fb_is_user_connected()) {
+    header( 'Location: '.$_GET['redirect'] ) ;
+    exit;
+  }elseif($user){
+    // Register or Login
+    try {
+      // Proceed knowing you have a logged in user who's authenticated.
+      $user_profile = $facebook->api('/me');
+      $ID = $wpdb->get_var($wpdb->prepare('
+        SELECT ID FROM '.$wpdb->prefix.'social_users WHERE type = "fb" AND identifier = "%d"
+      ',$user_profile['id']));
+      if(!get_user_by('id',$ID)){
+        $wpdb->query($wpdb->prepare('
+          DELETE FROM '.$wpdb->prefix.'social_users WHERE ID = "%d"
+        ', $ID));
+        $ID = null;
+      }
+      if(!is_user_logged_in()){
+        if($ID == NULL){ // Register
+          if(!isset($user_profile['email'])) $user_profile['email'] = $user_profile['username'].'@facebook.com';
+          $ID = email_exists($user_profile['email']);
+          if($ID == false){ // Real register
+            require_once( ABSPATH . WPINC . '/registration.php');
+            $random_password = wp_generate_password( $length=12, $include_standard_special_chars=false );
+            
+            if(!isset($new_fb_settings['fb_user_prefix'])) $new_fb_settings['fb_user_prefix'] = 'facebook-';
+            $sanitized_user_login = sanitize_user($new_fb_settings['fb_user_prefix'].$user_profile['username']);
+            if(!validate_username($sanitized_user_login)){
+              $sanitized_user_login = sanitize_user('facebook'.$user_profile['id']);
             }
-            if($ID){
-              $wpdb->insert( 
-              	$wpdb->prefix.'social_users', 
-              	array( 
-              		'ID' => $ID, 
-              		'type' => 'fb',
-                  'identifier' => $user_profile['id']
-              	), 
-              	array( 
-              		'%d', 
-              		'%s',
-                  '%s'
-              	) 
-              );
+            $defaul_user_name = $sanitized_user_login;
+            $i = 1;
+            while(username_exists($sanitized_user_login)){
+              $sanitized_user_login = $defaul_user_name.$i;
+              $i++;
             }
-            if(isset($new_fb_settings['fb_redirect_reg']) && $new_fb_settings['fb_redirect_reg'] != '' && $new_fb_settings['fb_redirect_reg'] != 'auto'){
-              $_SESSION['redirect'] = $new_fb_settings['fb_redirect_reg'];
+            
+            $ID = wp_create_user($sanitized_user_login, $random_password, $user_profile['email'] );
+            if(!is_wp_error($ID)){
+            	wp_new_user_notification($ID, $random_password);
+              wp_update_user(array(
+                'ID' => $ID, 
+                'display_name' => $user_profile['name'], 
+                'first_name' => $user_profile['first_name'], 
+                'last_name' => $user_profile['last_name']
+              ));
+              update_user_meta( $ID, 'fb_profile_picture', 'https://graph.facebook.com/'.$user_profile['id'].'/picture?type=large');
+            }else{
+              return;
             }
           }
-          
-          if($ID){ // Login
-            wp_set_auth_cookie($ID, true, false);
-            $user_info = get_userdata($ID);
-            do_action('wp_login', $user_info->user_login, $user_info);
-            header( 'Location: '.$_SESSION['redirect'] );
-            unset($_SESSION['redirect']);
-            exit;
-          }
-        }else{
-          $current_user = wp_get_current_user();
-          if($current_user->ID == $ID){ // It was a simple login
-            header( 'Location: '.$_SESSION['redirect'] );
-            unset($_SESSION['redirect']);
-            exit;
-          }elseif($ID === NULL){  // Let's connect the accout to the current user!
+          if($ID){
             $wpdb->insert( 
             	$wpdb->prefix.'social_users', 
             	array( 
-            		'ID' => $current_user->ID, 
+            		'ID' => $ID, 
             		'type' => 'fb',
                 'identifier' => $user_profile['id']
             	), 
@@ -204,32 +190,70 @@ function new_fb_login(){
                 '%s'
             	) 
             );
-            $_SESSION['new_fb_admin_notice'] = __('Your Facebook profile is successfully linked with your account. Now you can sign in with Facebook easily.', 'nextend-facebook-connect');
-            header( 'Location: '.$_SESSION['redirect'] );
-            unset($_SESSION['redirect']);
-            exit;
-          }else{
-            $_SESSION['new_fb_admin_notice'] = __('This Facebook profile is already linked with other account. Linking process failed!', 'nextend-facebook-connect');
-            header( 'Location: '.$_SESSION['redirect'] );
-            unset($_SESSION['redirect']);
-            exit;
+          }
+          if(isset($new_fb_settings['fb_redirect_reg']) && $new_fb_settings['fb_redirect_reg'] != '' && $new_fb_settings['fb_redirect_reg'] != 'auto'){
+            $_SESSION['redirect'] = $new_fb_settings['fb_redirect_reg'];
           }
         }
-        exit;
-      } catch (FacebookApiException $e) {
-        echo '<pre>'.htmlspecialchars(print_r($e, true)).'</pre>';
-        $user = null;
+        
+        if($ID){ // Login
+          $secure_cookie = is_ssl();
+          $secure_cookie = apply_filters('secure_signon_cookie', $secure_cookie, array());
+          global $auth_secure_cookie; // XXX ugly hack to pass this to wp_authenticate_cookie
+          $auth_secure_cookie = $secure_cookie;
+          
+          wp_set_auth_cookie($ID, true, $secure_cookie);
+          $user_info = get_userdata($ID);
+          do_action('wp_login', $user_info->user_login, $user_info);
+          header( 'Location: '.$_SESSION['redirect'] );
+          unset($_SESSION['redirect']);
+          exit;
+        }
+      }else{
+        $current_user = wp_get_current_user();
+        if($current_user->ID == $ID){ // It was a simple login
+          header( 'Location: '.$_SESSION['redirect'] );
+          unset($_SESSION['redirect']);
+          exit;
+        }elseif($ID === NULL){  // Let's connect the accout to the current user!
+          $wpdb->insert( 
+          	$wpdb->prefix.'social_users', 
+          	array( 
+          		'ID' => $current_user->ID, 
+          		'type' => 'fb',
+              'identifier' => $user_profile['id']
+          	), 
+          	array( 
+          		'%d', 
+          		'%s',
+              '%s'
+          	) 
+          );
+          $_SESSION['new_fb_admin_notice'] = __('Your Facebook profile is successfully linked with your account. Now you can sign in with Facebook easily.', 'nextend-facebook-connect');
+          header( 'Location: '.$_SESSION['redirect'] );
+          unset($_SESSION['redirect']);
+          exit;
+        }else{
+          $_SESSION['new_fb_admin_notice'] = __('This Facebook profile is already linked with other account. Linking process failed!', 'nextend-facebook-connect');
+          header( 'Location: '.$_SESSION['redirect'] );
+          unset($_SESSION['redirect']);
+          exit;
+        }
       }
       exit;
-    }else{
-      $loginUrl = $facebook->getLoginUrl(array('scope' => 'email') );
-      if(isset($new_fb_settings['fb_redirect']) && $new_fb_settings['fb_redirect'] != '' && $new_fb_settings['fb_redirect'] != 'auto'){
-        $_GET['redirect'] = $new_fb_settings['fb_redirect'];
-      }
-      $_SESSION['redirect'] = isset($_GET['redirect']) ? $_GET['redirect'] : site_url();
-      header( 'Location: '.$loginUrl ) ;
-      exit;
+    } catch (FacebookApiException $e) {
+      echo '<pre>'.htmlspecialchars(print_r($e, true)).'</pre>';
+      $user = null;
     }
+    exit;
+  }else{
+    $loginUrl = $facebook->getLoginUrl(array('scope' => 'email') );
+    if(isset($new_fb_settings['fb_redirect']) && $new_fb_settings['fb_redirect'] != '' && $new_fb_settings['fb_redirect'] != 'auto'){
+      $_GET['redirect'] = $new_fb_settings['fb_redirect'];
+    }
+    $_SESSION['redirect'] = isset($_GET['redirect']) ? $_GET['redirect'] : site_url();
+    header( 'Location: '.$loginUrl ) ;
+    exit;
   }
 }
 
