@@ -3,7 +3,7 @@
 Plugin Name: Nextend Facebook Connect
 Plugin URI: http://nextendweb.com/
 Description: This plugins helps you create Facebook login and register buttons. The login and register process only takes one click.
-Version: 1.4.34
+Version: 1.4.35
 Author: Roland Soos
 License: GPL2
 */
@@ -121,7 +121,7 @@ function new_fb_login(){
 
 function new_fb_login_action(){
   global $wp, $wpdb, $new_fb_settings;
-  require(dirname(__FILE__).'/sdk/init.php');
+  require_once(dirname(__FILE__).'/sdk/init.php');
   
   $user = $facebook->getUser();
   
@@ -205,6 +205,8 @@ function new_fb_login_action(){
           wp_set_auth_cookie($ID, true, $secure_cookie);
           $user_info = get_userdata($ID);
           do_action('wp_login', $user_info->user_login, $user_info);
+          update_user_meta( $ID, 'fb_user_access_token', $facebook->getAccessToken());
+          
           header( 'Location: '.$_SESSION['redirect'] );
           unset($_SESSION['redirect']);
           exit;
@@ -229,6 +231,7 @@ function new_fb_login_action(){
               '%s'
           	) 
           );
+          update_user_meta( $current_user->ID, 'fb_user_access_token', $facebook->getAccessToken());
           $_SESSION['new_fb_admin_notice'] = __('Your Facebook profile is successfully linked with your account. Now you can sign in with Facebook easily.', 'nextend-facebook-connect');
           header( 'Location: '.$_SESSION['redirect'] );
           unset($_SESSION['redirect']);
@@ -247,7 +250,7 @@ function new_fb_login_action(){
     }
     exit;
   }else{
-    $loginUrl = $facebook->getLoginUrl(array('scope' => 'email') );
+    $loginUrl = $facebook->getLoginUrl(array('scope' => 'email,offline_access') );
     if(isset($new_fb_settings['fb_redirect']) && $new_fb_settings['fb_redirect'] != '' && $new_fb_settings['fb_redirect'] != 'auto'){
       $_GET['redirect'] = $new_fb_settings['fb_redirect'];
     }
@@ -268,6 +271,10 @@ function new_fb_is_user_connected(){
   ', $current_user->ID));
   if($ID === NULL) return false;
   return $ID;
+}
+
+function new_fb_get_user_access_token($id){
+  return get_user_meta($id, 'fb_user_access_token', true);
 }
 
 /*
@@ -301,9 +308,11 @@ add_action('profile_personal_options', 'new_add_fb_connect_field');
 
 function new_add_fb_login_form(){
   ?>
-  <script>
-  var has_social_form = false;
-  var socialLogins = null;
+  <script type="text/javascript">
+  if(jQuery.type(has_social_form) === "undefined"){
+    var has_social_form = false;
+    var socialLogins = null;
+  }
   jQuery(document).ready(function(){
     (function($) {
       if(!has_social_form){
