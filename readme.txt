@@ -4,7 +4,7 @@ Tags: facebook, register, login, social connect, social, facebook connect
 Donate link: https://www.facebook.com/nextendweb
 Requires at least: 3.0
 Tested up to: 3.4
-Stable tag: 1.4.37
+Stable tag: 1.4.38
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -67,7 +67,7 @@ After you activated the plugin, the plugin will autmatically
 
 == Changelog ==
 
-= 1.4.37 =
+= 1.4.38 =
 * Added check for login inputs
 
 = 1.4.36 =
