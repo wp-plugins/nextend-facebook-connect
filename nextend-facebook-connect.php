@@ -3,7 +3,7 @@
 Plugin Name: Nextend Facebook Connect
 Plugin URI: http://nextendweb.com/
 Description: This plugins helps you create Facebook login and register buttons. The login and register process only takes one click.
-Version: 1.4.38
+Version: 1.4.42
 Author: Roland Soos
 License: GPL2
 */
@@ -317,11 +317,12 @@ function new_add_fb_login_form(){
     (function($) {
       if(!has_social_form){
         has_social_form = true;
-        var loginForm = $.merge($('#loginform'),$('#registerform'));
+        var loginForm = $('#loginform,#registerform,#front-login-form');
         socialLogins = $('<div class="newsociallogins" style="text-align: center;"><div style="clear:both;"></div></div>');
         if(loginForm.find('input').length > 0)
           loginForm.prepend("<h3 style='text-align:center;'>OR</h3>");
         loginForm.prepend(socialLogins);
+        socialLogins = loginForm.find('.newsociallogins');
       }
       if(!window.fb_added){
         socialLogins.prepend('<?php echo addslashes(preg_replace('/^\s+|\n|\r|\s+$/m', '',new_fb_sign_button())); ?>');
@@ -335,6 +336,7 @@ function new_add_fb_login_form(){
 
 add_action('login_form', 'new_add_fb_login_form');
 add_action('register_form', 'new_add_fb_login_form');
+add_action('bp_sidebar_login_form', 'new_add_fb_login_form');
 
 add_filter( 'get_avatar', 'new_fb_insert_avatar', 1, 5 );
 function new_fb_insert_avatar( $avatar = '', $id_or_email, $size = 96, $default = '', $alt = false ) {
