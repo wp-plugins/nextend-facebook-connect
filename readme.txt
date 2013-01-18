@@ -4,7 +4,7 @@ Tags: facebook, register, login, social connect, social, facebook connect
 Donate link: https://www.facebook.com/nextendweb
 Requires at least: 3.0
 Tested up to: 3.4
-Stable tag: 1.4.42
+Stable tag: 1.4.43
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -66,6 +66,11 @@ After you activated the plugin, the plugin will autmatically
 2. Our Social Connect plugins in the profile page for account linking
 
 == Changelog ==
+
+= 1.4.43 =
+* Redirection fix
+* Added feature: unlink account
+* Added WP actions for register/login/account linking. Read more: http://www.nextendweb.com/knowledgebase/question/how-can-i-make-custom-calls-when-a-visitor-log-in-with-facebook-connect
 
 = 1.4.42 =
 * Added check for login inputs

@@ -171,6 +171,14 @@ function NextendFB_Options_Page() {
 		  <textarea cols="83" rows="3" name="fb_link_button"><?php echo $nextend_fb_connect['fb_link_button']; ?></textarea>
 		</td>
 		</tr>
+    
+    <tr>
+		<th scope="row"><?php _e('Unlink account button:', 'nextend-facebook-connect'); ?></th>
+		<td>
+      <?php if(!isset($nextend_fb_connect['fb_unlink_button'])) $nextend_fb_connect['fb_unlink_button'] = '<div class="new-fb-btn new-fb-1 new-fb-default-anim"><div class="new-fb-1-1"><div class="new-fb-1-1-1">UNLINK ACCOUNT</div></div></div>'; ?>
+		  <textarea cols="83" rows="3" name="fb_unlink_button"><?php echo $nextend_fb_connect['fb_unlink_button']; ?></textarea>
+		</td>
+		</tr>
     <tr>
 		<th scope="row"></th>
 		<td>

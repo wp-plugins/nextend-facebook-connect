@@ -3,7 +3,7 @@
 Plugin Name: Nextend Facebook Connect
 Plugin URI: http://nextendweb.com/
 Description: This plugins helps you create Facebook login and register buttons. The login and register process only takes one click.
-Version: 1.4.42
+Version: 1.4.43
 Author: Roland Soos
 License: GPL2
 */
@@ -35,8 +35,11 @@ $new_fb_settings = maybe_unserialize(get_option('nextend_fb_connect'));
   Sessions required for the profile notices 
 */
 function new_fb_start_session() {
-  if(!session_id())
-    session_start();
+  if(!headers_sent()){
+    if(!session_id()){
+      session_start();
+    }
+  }
 }
 
 function new_fb_end_session() {
@@ -126,9 +129,41 @@ function new_fb_login_action(){
   $user = $facebook->getUser();
   
   if ($user && is_user_logged_in() && new_fb_is_user_connected()) {
+    
+    if($_SESSION['redirect'] == '' || $_SESSION['redirect'] == new_fb_login_url()){
+      if(isset($_GET['redirect']) ){
+        $_SESSION['redirect'] = $_GET['redirect'];
+      }else{
+        $_SESSION['redirect'] = site_url();
+      }
+    }
+      
+    if(isset($_GET['action']) && $_GET['action'] == 'unlink'){
+      $user_info = wp_get_current_user();
+      if(get_user_meta( $user_info->ID, 'new_fb_default_password', true) == $user_info->user_pass){
+        // Unlinking not available
+        $_SESSION['new_fb_admin_notice'] = __('Your account using the default password, which generated with social register. Please change it and try again!', 'nextend-facebook-connect');
+        header( 'Location: '.$_SESSION['redirect'] );
+        unset($_SESSION['redirect']);
+        exit;
+      }else{
+        $wpdb->query(
+          $wpdb->prepare( 
+          	'DELETE FROM '.$wpdb->prefix.'social_users
+            WHERE ID = %d
+            AND type = \'fb\'', $user_info->ID));
+        wp_logout(0);
+        header( 'Location: '.$_SESSION['redirect'] );
+        unset($_SESSION['redirect']);
+        exit;        
+      }
+      exit;
+    }
     header( 'Location: '.$_GET['redirect'] ) ;
     exit;
   }elseif($user){
+    if($_SESSION['redirect'] == '' || $_SESSION['redirect'] == new_fb_login_url())
+      $_SESSION['redirect'] = site_url();
     // Register or Login
     try {
       // Proceed knowing you have a logged in user who's authenticated.
@@ -165,13 +200,16 @@ function new_fb_login_action(){
             $ID = wp_create_user($sanitized_user_login, $random_password, $user_profile['email'] );
             if(!is_wp_error($ID)){
             	wp_new_user_notification($ID, $random_password);
+              $user_info = get_userdata($ID);
               wp_update_user(array(
                 'ID' => $ID, 
                 'display_name' => $user_profile['name'], 
                 'first_name' => $user_profile['first_name'], 
                 'last_name' => $user_profile['last_name']
               ));
+              update_user_meta( $ID, 'new_fb_default_password', $user_info->user_pass);
               update_user_meta( $ID, 'fb_profile_picture', 'https://graph.facebook.com/'.$user_profile['id'].'/picture?type=large');
+              do_action('nextend_fb_user_registered', $user_profile, $facebook);
             }else{
               return;
             }
@@ -207,6 +245,8 @@ function new_fb_login_action(){
           do_action('wp_login', $user_info->user_login, $user_info);
           update_user_meta( $ID, 'fb_user_access_token', $facebook->getAccessToken());
           
+          do_action('nextend_fb_user_logged_in', $user_profile, $facebook);
+          
           header( 'Location: '.$_SESSION['redirect'] );
           unset($_SESSION['redirect']);
           exit;
@@ -232,6 +272,7 @@ function new_fb_login_action(){
           	) 
           );
           update_user_meta( $current_user->ID, 'fb_user_access_token', $facebook->getAccessToken());
+          do_action('nextend_fb_user_account_linked', $user_profile, $facebook);
           $_SESSION['new_fb_admin_notice'] = __('Your Facebook profile is successfully linked with your account. Now you can sign in with Facebook easily.', 'nextend-facebook-connect');
           header( 'Location: '.$_SESSION['redirect'] );
           unset($_SESSION['redirect']);
@@ -245,7 +286,8 @@ function new_fb_login_action(){
       }
       exit;
     } catch (FacebookApiException $e) {
-      echo '<pre>'.htmlspecialchars(print_r($e, true)).'</pre>';
+      echo 'Caught exception: ',  $e->getMessage(), "\n";
+      //echo '<pre>'.htmlspecialchars(print_r($e, true)).'</pre>';
       $user = null;
     }
     exit;
@@ -282,7 +324,7 @@ function new_fb_get_user_access_token($id){
 */
 function new_add_fb_connect_field() {
   global $new_is_social_header;
-  if(new_fb_is_user_connected()) return;  
+  //if(new_fb_is_user_connected()) return;  
   
   if($new_is_social_header === NULL){
     ?>
@@ -297,7 +339,13 @@ function new_add_fb_connect_field() {
         <th>
         </th>	
         <td>
-          <?php echo new_fb_link_button() ?>
+          <?php 
+            if(new_fb_is_user_connected()){
+              echo new_fb_unlink_button();
+            }else{
+              echo new_fb_link_button();
+            }
+          ?>
         </td>
       </tr>
     </tbody>
@@ -393,7 +441,24 @@ function new_fb_sign_button(){
 
 function new_fb_link_button(){
   global $new_fb_settings;
-  return '<a href="'.new_fb_login_url().'&redirect='.site_url().$GLOBALS['HTTP_SERVER_VARS']['REQUEST_URI'].'">'.$new_fb_settings['fb_link_button'].'</a><br />';
+  return '<a href="'.new_fb_login_url().'&redirect='.new_fb_curPageURL().'">'.$new_fb_settings['fb_link_button'].'</a><br />';
+}
+
+function new_fb_unlink_button(){
+  global $new_fb_settings;
+  return '<a href="'.new_fb_login_url().'&action=unlink&redirect='.new_fb_curPageURL().'">'.$new_fb_settings['fb_unlink_button'].'</a><br />';
+}
+
+function new_fb_curPageURL() {
+  $pageURL = 'http';
+  if (isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on") {$pageURL .= "s";}
+  $pageURL .= "://";
+  if ($_SERVER["SERVER_PORT"] != "80") {
+    $pageURL .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
+  } else {
+    $pageURL .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
+  }
+  return $pageURL;
 }
 
 function new_fb_login_url(){
