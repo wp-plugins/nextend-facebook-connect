@@ -4,7 +4,7 @@ Tags: facebook, register, login, social connect, social, facebook connect
 Donate link: https://www.facebook.com/nextendweb
 Requires at least: 3.0
 Tested up to: 3.4
-Stable tag: 1.4.44
+Stable tag: 1.4.45
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -66,6 +66,10 @@ After you activated the plugin, the plugin will autmatically
 2. Our Social Connect plugins in the profile page for account linking
 
 == Changelog ==
+
+= 1.4.45 =
+* New filter added to get extended Facebook permissions: nextend_fb_scope
+* Read more on the new filter: http://www.nextendweb.com/knowledgebase/question/how-can-i-get-extended-facebook-permissions-for-other-fields
 
 = 1.4.44 =
 * Now user not logged out after the unlinking process.
