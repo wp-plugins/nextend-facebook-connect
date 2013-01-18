@@ -3,7 +3,7 @@
 Plugin Name: Nextend Facebook Connect
 Plugin URI: http://nextendweb.com/
 Description: This plugins helps you create Facebook login and register buttons. The login and register process only takes one click.
-Version: 1.4.43
+Version: 1.4.44
 Author: Roland Soos
 License: GPL2
 */
@@ -152,7 +152,6 @@ function new_fb_login_action(){
           	'DELETE FROM '.$wpdb->prefix.'social_users
             WHERE ID = %d
             AND type = \'fb\'', $user_info->ID));
-        wp_logout(0);
         header( 'Location: '.$_SESSION['redirect'] );
         unset($_SESSION['redirect']);
         exit;        
