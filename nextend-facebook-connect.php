@@ -3,7 +3,7 @@
 Plugin Name: Nextend Facebook Connect
 Plugin URI: http://nextendweb.com/
 Description: This plugins helps you create Facebook login and register buttons. The login and register process only takes one click.
-Version: 1.4.46
+Version: 1.4.47
 Author: Roland Soos
 License: GPL2
 */
@@ -133,8 +133,7 @@ function new_fb_login_action(){
 	      'DELETE FROM '.$wpdb->prefix.'social_users
 	  WHERE ID = %d
 	  AND type = \'fb\'', $user_info->ID));
-      $_SESSION['new_fb_admin_notice'] = __('Your Facebook profile is successfully unlinked with your account.', 'nextend-facebook-connect');
-      new_fb_redirect();
+      $_SESSION['new_fb_admin_notice'] = __('Your Facebook profile is successfully unlinked from your account.', 'nextend-facebook-connect');
     }
     new_fb_redirect();
   }
@@ -228,13 +227,11 @@ function new_fb_login_action(){
           update_user_meta( $ID, 'fb_user_access_token', $facebook->getAccessToken());
           
           do_action('nextend_fb_user_logged_in', $user_profile, $facebook);
-          
-          new_fb_redirect();
         }
       }else{
         $current_user = wp_get_current_user();
-        if($current_user->ID == $ID){ // It was a simple login
-          new_fb_redirect();
+        if($current_user->ID == $ID){
+	  // It was a simple login
         }elseif($ID === NULL){  // Let's connect the accout to the current user!
           $wpdb->insert( 
           	$wpdb->prefix.'social_users', 
@@ -252,13 +249,11 @@ function new_fb_login_action(){
           update_user_meta( $current_user->ID, 'fb_user_access_token', $facebook->getAccessToken());
           do_action('nextend_fb_user_account_linked', $user_profile, $facebook);
           $_SESSION['new_fb_admin_notice'] = __('Your Facebook profile is successfully linked with your account. Now you can sign in with Facebook easily.', 'nextend-facebook-connect');
-          new_fb_redirect();
         }else{
           $_SESSION['new_fb_admin_notice'] = __('This Facebook profile is already linked with other account. Linking process failed!', 'nextend-facebook-connect');
-          new_fb_redirect();
         }
       }
-      exit;
+      new_fb_redirect();
     } catch (FacebookApiException $e) {
       echo 'Caught exception: ',  $e->getMessage(), "\n";
       //echo '<pre>'.htmlspecialchars(print_r($e, true)).'</pre>';
