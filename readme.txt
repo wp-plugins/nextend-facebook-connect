@@ -68,7 +68,7 @@ After you activated the plugin, the plugin will autmatically
 == Changelog ==
 
 = 1.4.54 =
-* Feature: You can now define NEXTEND_FB_APP_ID and NEXTEND_FB_APP_ID contant and it will overwrite the backend settings.
+* Feature: You can now define NEXTEND_FB_APP_ID and NEXTEND_FB_APP_SECRET contant and it will overwrite the backend settings.
 
 = 1.4.53 =
 * Error messages added if some PHP components are missing.
