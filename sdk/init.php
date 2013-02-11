@@ -25,7 +25,7 @@ if(!class_exists('Facebook')){
 $settings = maybe_unserialize(get_option('nextend_fb_connect'));
 
 if(defined('NEXTEND_FB_APP_ID')) $settings['fb_appid'] = NEXTEND_FB_APP_ID;
-if(defined('NEXTEND_FB_APP_SECRET')) $settings['fb_secret'] = NEXTEND_FB_APP_ID;
+if(defined('NEXTEND_FB_APP_SECRET')) $settings['fb_secret'] = NEXTEND_FB_APP_SECRET;
 
 $facebook = new Facebook(array(
   'appId' => $settings['fb_appid'],
