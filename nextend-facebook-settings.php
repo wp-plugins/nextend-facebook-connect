@@ -102,7 +102,7 @@ function NextendFB_Options_Page() {
 	<h3 class="hndle"><?php _e('About this plugin', 'nextend-facebook-connect'); ?></h3>
 	<div class="inside"><ul>
   
-  <li><a href="http://www.nextendweb.com/social-connect-plugins-for-wordpress.html" target="_blank"><?php _e('Check the realted <b>blog post</b>!', 'nextend-facebook-connect'); ?></a></li>
+  <li><a href="http://www.nextendweb.com/social-connect-plugins-for-wordpress.html" target="_blank"><?php _e('Check the related <b>blog post</b>!', 'nextend-facebook-connect'); ?></a></li>
 	<li><br></li>
 	<li><a href="http://wordpress.org/extend/plugins/nextend-facebook-connect/" target="_blank"><?php _e('Nextend Facebook Connect', 'nextend-facebook-connect'); ?></a></li>
 	<li><br></li>
