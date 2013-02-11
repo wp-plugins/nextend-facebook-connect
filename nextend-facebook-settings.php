@@ -43,6 +43,28 @@ function NextendFB_Options_Page() {
 		echo $message;
 		?></p></strong></div><?php
 	} ?>
+  
+  <?php
+  if (!function_exists('curl_init')) {
+  ?>
+    <div class="error"><strong><p>Facebook needs the CURL PHP extension. Contact your server adminsitrator!</p></strong></div>
+  <?php
+  }else{
+    $version = curl_version();
+    $ssl_supported= ($version['features'] & CURL_VERSION_SSL);
+    if(!$ssl_supported){
+    ?>
+      <div class="error"><strong><p>Protocol https not supported or disabled in libcurl. Contact your server adminsitrator!</p></strong></div>
+    <?php
+    }
+  }
+  if (!function_exists('json_decode')) {
+    ?>
+      <div class="error"><strong><p>Facebook needs the JSON PHP extension. Contact your server adminsitrator!</p></strong></div>
+    <?php
+  }
+  ?>
+  
 	<div id="newfb-desc">
 	<p><?php _e('This plugins helps you create Facebook login and register buttons. The login and register process only takes one click and you can fully customize the buttons with images and other assets.', 'nextend-facebook-connect'); ?></p>
 	<h3><?php _e('Setup', 'nextend-facebook-connect'); ?></h3>
