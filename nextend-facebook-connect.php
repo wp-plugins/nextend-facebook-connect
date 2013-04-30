@@ -4,7 +4,7 @@
 Plugin Name: Nextend Facebook Connect
 Plugin URI: http://nextendweb.com/
 Description: This plugins helps you create Facebook login and register buttons. The login and register process only takes one click.
-Version: 1.4.55
+Version: 1.4.56
 Author: Roland Soos
 License: GPL2
 */
@@ -135,7 +135,7 @@ function new_fb_login_action() {
       $wpdb->query($wpdb->prepare('DELETE FROM ' . $wpdb->prefix . 'social_users
           WHERE ID = %d
           AND type = \'fb\'', $user_info->ID));
-      setcookie('new_fb_admin_notice', __('Your Facebook profile is successfully unlinked from your account.', 'nextend-facebook-connect'), time() + 3600, '/');
+      set_site_transient($user_info->ID.'_new_fb_admin_notice',__('Your Facebook profile is successfully unlinked from your account.', 'nextend-facebook-connect'), 3600);
     }
     new_fb_redirect();
   }
@@ -245,9 +245,11 @@ function new_fb_login_action() {
           ));
           update_user_meta($current_user->ID, 'fb_user_access_token', $facebook->getAccessToken());
           do_action('nextend_fb_user_account_linked', $ID, $user_profile, $facebook);
-            setcookie('new_fb_admin_notice', __('Your Facebook profile is successfully linked with your account. Now you can sign in with Facebook easily.', 'nextend-facebook-connect'), time() + 3600, '/');
+            $user_info = wp_get_current_user();
+            set_site_transient($user_info->ID.'_new_fb_admin_notice',__('Your Facebook profile is successfully linked with your account. Now you can sign in with Facebook easily.', 'nextend-facebook-connect'), 3600);
         } else {
-            setcookie('new_fb_admin_notice', __('This Facebook profile is already linked with other account. Linking process failed!', 'nextend-facebook-connect'), time() + 3600, '/');
+            $user_info = wp_get_current_user();
+            set_site_transient($user_info->ID.'_new_fb_admin_notice',__('This Facebook profile is already linked with other account. Linking process failed!', 'nextend-facebook-connect'), 3600);
         }
       }
       new_fb_redirect();
@@ -459,11 +461,14 @@ function new_fb_redirect() {
   if (!isset($_COOKIE['redirect']) || $_COOKIE['redirect'] == '' || $_COOKIE['redirect'] == new_fb_login_url()) {
     if (isset($_GET['redirect'])) {
       $_COOKIE['redirect'] = $_GET['redirect'];
+      setcookie('redirect', $_COOKIE['redirect'], time() + 3600, '/');
     } else {
       $_COOKIE['redirect'] = $_GET['redirect'];
+      setcookie('redirect', $_COOKIE['redirect'], time() + 3600, '/');
     }
   }
   header('LOCATION: ' . $_COOKIE['redirect']);
+  setcookie('redirect', site_url(), time() + 3600, '/');
   setcookie('redirect', $_COOKIE['redirect'], time() - 3600, '/');
   exit;
 }
@@ -494,12 +499,14 @@ Session notices used in the profile settings
 */
 
 function new_fb_admin_notice() {
-
-  if (isset($_COOKIE['new_fb_admin_notice'])) {
+  $user_info = wp_get_current_user();
+  $notice = get_site_transient($user_info->ID.'_new_fb_admin_notice');
+  if ($notice !== false) {
     echo '<div class="updated">
-       <p>' . $_COOKIE['new_fb_admin_notice'] . '</p>
+       <p>' . $notice . '</p>
     </div>';
-    setcookie('new_fb_admin_notice', '', time() - 3600, '/');
+    delete_site_transient($user_info->ID.'_new_fb_admin_notice');
   }
 }
+
 add_action('admin_notices', 'new_fb_admin_notice');
