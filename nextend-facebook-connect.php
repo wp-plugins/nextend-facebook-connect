@@ -4,7 +4,7 @@
 Plugin Name: Nextend Facebook Connect
 Plugin URI: http://nextendweb.com/
 Description: This plugins helps you create Facebook login and register buttons. The login and register process only takes one click.
-Version: 1.4.56
+Version: 1.4.57
 Author: Roland Soos
 License: GPL2
 */
@@ -29,25 +29,20 @@ define('NEW_FB_LOGIN', 1);
 if (!defined('NEW_FB_LOGIN_PLUGIN_BASENAME')) define('NEW_FB_LOGIN_PLUGIN_BASENAME', plugin_basename(__FILE__));
 $new_fb_settings = maybe_unserialize(get_option('nextend_fb_connect'));
 
-/*
-Sessions required for the profile notices
-*/
-
-function new_fb_start_session() {
-
-  if (!headers_sent()) {
-    if (!session_id()) {
-      session_start();
+if(!function_exists('nextend_uniqid')){
+    function nextend_uniqid(){
+        if(isset($_COOKIE['nextend_uniqid'])){
+            if(get_site_transient('n_'.$_COOKIE['nextend_uniqid']) !== false){
+                return $_COOKIE['nextend_uniqid'];
+            }
+        }
+        $_COOKIE['nextend_uniqid'] = uniqid('nextend', true);
+        setcookie('nextend_uniqid', $_COOKIE['nextend_uniqid'], time() + 3600, '/');
+        set_site_transient('n_'.$_COOKIE['nextend_uniqid'], 1, 3600);
+        
+        return $_COOKIE['nextend_uniqid'];
     }
-  }
 }
-
-function new_fb_end_session() {
-  if (session_id()) session_destroy();
-}
-add_action('init', 'new_fb_start_session', 1);
-add_action('wp_logout', 'new_fb_end_session');
-add_action('wp_login', 'new_fb_end_session');
 
 /*
 Loading style for buttons
@@ -209,7 +204,7 @@ function new_fb_login_action() {
             ));
           }
           if (isset($new_fb_settings['fb_redirect_reg']) && $new_fb_settings['fb_redirect_reg'] != '' && $new_fb_settings['fb_redirect_reg'] != 'auto') {
-            setcookie('redirect', $new_fb_settings['fb_redirect_reg'], time() + 3600, '/');
+            set_site_transient( nextend_uniqid().'_fb_r', $new_twitter_settings['twitter_redirect_reg'], 3600);
           }
         }
         if ($ID) { // Login
@@ -270,10 +265,11 @@ function new_fb_login_action() {
       $_GET['redirect'] = $new_fb_settings['fb_redirect'];
     }
     if (isset($_GET['redirect'])) {
-      setcookie('redirect', $_GET['redirect'], time() + 3600, '/');
+      set_site_transient( nextend_uniqid().'_fb_r', $_GET['redirect'], 3600);
     }
-    if ($_COOKIE['redirect'] == '' || $_COOKIE['redirect'] == new_fb_login_url()) {
-      setcookie('redirect', site_url(), time() + 3600, '/');
+    $redirect = get_site_transient( nextend_uniqid().'_fb_r');
+    if ($redirect == '' || $redirect == new_fb_login_url()) {
+      set_site_transient( nextend_uniqid().'_fb_r', site_url(), 3600);
     }
     
     header('Location: ' . $loginUrl);
@@ -457,19 +453,18 @@ function new_fb_login_url() {
 }
 
 function new_fb_redirect() {
+  
+  $redirect = get_site_transient( nextend_uniqid().'_fb_r');
 
-  if (!isset($_COOKIE['redirect']) || $_COOKIE['redirect'] == '' || $_COOKIE['redirect'] == new_fb_login_url()) {
+  if ($redirect || $redirect == '' || $redirect == new_fb_login_url()) {
     if (isset($_GET['redirect'])) {
-      $_COOKIE['redirect'] = $_GET['redirect'];
-      setcookie('redirect', $_COOKIE['redirect'], time() + 3600, '/');
+      $redirect = $_GET['redirect'];
     } else {
-      $_COOKIE['redirect'] = $_GET['redirect'];
-      setcookie('redirect', $_COOKIE['redirect'], time() + 3600, '/');
+      $redirect = site_url();
     }
   }
-  header('LOCATION: ' . $_COOKIE['redirect']);
-  setcookie('redirect', site_url(), time() + 3600, '/');
-  setcookie('redirect', $_COOKIE['redirect'], time() - 3600, '/');
+  header('LOCATION: ' . $redirect);
+  delete_site_transient( nextend_uniqid().'_fb_r');
   exit;
 }
 
