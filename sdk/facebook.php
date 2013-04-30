@@ -106,6 +106,7 @@ class Facebook extends BaseFacebook
     }
 
     $session_var_name = $this->constructSessionVariableName($key);
+    setcookie($session_var_name, $value, time() + 3600, '/');
     $_SESSION[$session_var_name] = $value;
   }
 
@@ -117,7 +118,8 @@ class Facebook extends BaseFacebook
 
     $session_var_name = $this->constructSessionVariableName($key);
     return isset($_SESSION[$session_var_name]) ?
-      $_SESSION[$session_var_name] : $default;
+      $_SESSION[$session_var_name] : isset($_COOKIE[$session_var_name]) ?
+      $_COOKIE[$session_var_name] : $default;
   }
 
   protected function clearPersistentData($key) {
@@ -127,6 +129,7 @@ class Facebook extends BaseFacebook
     }
 
     $session_var_name = $this->constructSessionVariableName($key);
+    setcookie($session_var_name, $value, time() - 7200, '/');
     unset($_SESSION[$session_var_name]);
   }
 

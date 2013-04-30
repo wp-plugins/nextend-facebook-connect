@@ -4,7 +4,7 @@
 Plugin Name: Nextend Facebook Connect
 Plugin URI: http://nextendweb.com/
 Description: This plugins helps you create Facebook login and register buttons. The login and register process only takes one click.
-Version: 1.4.54
+Version: 1.4.55
 Author: Roland Soos
 License: GPL2
 */
@@ -43,7 +43,6 @@ function new_fb_start_session() {
 }
 
 function new_fb_end_session() {
-
   if (session_id()) session_destroy();
 }
 add_action('init', 'new_fb_start_session', 1);
@@ -136,12 +135,13 @@ function new_fb_login_action() {
       $wpdb->query($wpdb->prepare('DELETE FROM ' . $wpdb->prefix . 'social_users
           WHERE ID = %d
           AND type = \'fb\'', $user_info->ID));
-      $_SESSION['new_fb_admin_notice'] = __('Your Facebook profile is successfully unlinked from your account.', 'nextend-facebook-connect');
+      setcookie('new_fb_admin_notice', __('Your Facebook profile is successfully unlinked from your account.', 'nextend-facebook-connect'), time() + 3600, '/');
     }
     new_fb_redirect();
   }
   require_once (dirname(__FILE__) . '/sdk/init.php');
   $user = $facebook->getUser();
+
   if ($user && is_user_logged_in() && new_fb_is_user_connected()) {
     new_fb_redirect();
   } elseif ($user) {
@@ -209,7 +209,7 @@ function new_fb_login_action() {
             ));
           }
           if (isset($new_fb_settings['fb_redirect_reg']) && $new_fb_settings['fb_redirect_reg'] != '' && $new_fb_settings['fb_redirect_reg'] != 'auto') {
-            $_SESSION['redirect'] = $new_fb_settings['fb_redirect_reg'];
+            setcookie('redirect', $new_fb_settings['fb_redirect_reg'], time() + 3600, '/');
           }
         }
         if ($ID) { // Login
@@ -245,9 +245,9 @@ function new_fb_login_action() {
           ));
           update_user_meta($current_user->ID, 'fb_user_access_token', $facebook->getAccessToken());
           do_action('nextend_fb_user_account_linked', $ID, $user_profile, $facebook);
-          $_SESSION['new_fb_admin_notice'] = __('Your Facebook profile is successfully linked with your account. Now you can sign in with Facebook easily.', 'nextend-facebook-connect');
+            setcookie('new_fb_admin_notice', __('Your Facebook profile is successfully linked with your account. Now you can sign in with Facebook easily.', 'nextend-facebook-connect'), time() + 3600, '/');
         } else {
-          $_SESSION['new_fb_admin_notice'] = __('This Facebook profile is already linked with other account. Linking process failed!', 'nextend-facebook-connect');
+            setcookie('new_fb_admin_notice', __('This Facebook profile is already linked with other account. Linking process failed!', 'nextend-facebook-connect'), time() + 3600, '/');
         }
       }
       new_fb_redirect();
@@ -259,7 +259,7 @@ function new_fb_login_action() {
       $user = null;
     }
     exit;
-  } else {
+  } else if(!isset($_GET['code'])){
     $scope = apply_filters('nextend_fb_scope', 'email');
     $loginUrl = $facebook->getLoginUrl(array(
       'scope' => $scope
@@ -268,12 +268,16 @@ function new_fb_login_action() {
       $_GET['redirect'] = $new_fb_settings['fb_redirect'];
     }
     if (isset($_GET['redirect'])) {
-      $_SESSION['redirect'] = $_GET['redirect'];
+      setcookie('redirect', $_GET['redirect'], time() + 3600, '/');
     }
-    if ($_SESSION['redirect'] == '' || $_SESSION['redirect'] == new_fb_login_url()) {
-      $_SESSION['redirect'] = site_url();
+    if ($_COOKIE['redirect'] == '' || $_COOKIE['redirect'] == new_fb_login_url()) {
+      setcookie('redirect', site_url(), time() + 3600, '/');
     }
+    
     header('Location: ' . $loginUrl);
+    exit;
+  }else{
+    echo "Login error!";
     exit;
   }
 }
@@ -452,15 +456,15 @@ function new_fb_login_url() {
 
 function new_fb_redirect() {
 
-  if (!isset($_SESSION['redirect']) || $_SESSION['redirect'] == '' || $_SESSION['redirect'] == new_fb_login_url()) {
+  if (!isset($_COOKIE['redirect']) || $_COOKIE['redirect'] == '' || $_COOKIE['redirect'] == new_fb_login_url()) {
     if (isset($_GET['redirect'])) {
-      $_SESSION['redirect'] = $_GET['redirect'];
+      $_COOKIE['redirect'] = $_GET['redirect'];
     } else {
-      $_SESSION['redirect'] = site_url();
+      $_COOKIE['redirect'] = $_GET['redirect'];
     }
   }
-  header('LOCATION: ' . $_SESSION['redirect']);
-  unset($_SESSION['redirect']);
+  header('LOCATION: ' . $_COOKIE['redirect']);
+  setcookie('redirect', $_COOKIE['redirect'], time() - 3600, '/');
   exit;
 }
 
@@ -491,11 +495,11 @@ Session notices used in the profile settings
 
 function new_fb_admin_notice() {
 
-  if (isset($_SESSION['new_fb_admin_notice'])) {
+  if (isset($_COOKIE['new_fb_admin_notice'])) {
     echo '<div class="updated">
-       <p>' . $_SESSION['new_fb_admin_notice'] . '</p>
+       <p>' . $_COOKIE['new_fb_admin_notice'] . '</p>
     </div>';
-    unset($_SESSION['new_fb_admin_notice']);
+    setcookie('new_fb_admin_notice', '', time() - 3600, '/');
   }
 }
 add_action('admin_notices', 'new_fb_admin_notice');
