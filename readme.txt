@@ -67,7 +67,7 @@ After you activated the plugin, the plugin will autmatically
 
 == Changelog ==
 
-= 1.4.55 =
+= 1.4.56 =
 * Fix: Now the plugin use wp transient for the admin messages
 * NOTICE: If the 1.4.54 version work for you fine, do NOT update yet!
 
