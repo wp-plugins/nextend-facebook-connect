@@ -4,7 +4,7 @@ Tags: facebook, register, login, social connect, social, facebook connect
 Donate link: https://www.facebook.com/nextendweb
 Requires at least: 3.0
 Tested up to: 3.4
-Stable tag: 1.4.58
+Stable tag: 1.4.59
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -66,6 +66,10 @@ After you activated the plugin, the plugin will autmatically
 2. Our Social Connect plugins in the profile page for account linking
 
 == Changelog ==
+
+= 1.4.59 =
+* Avatar fix
+* Buddypress avatar support. If Buddypress avatar not exists, then FB avatar used. If there is a BuddyPress avatar, that will be used.
 
 = 1.4.58 =
 * Typo in redirects
