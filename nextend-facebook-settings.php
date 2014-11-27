@@ -76,13 +76,14 @@ function NextendFB_Options_Page() {
 	<p><?php _e('This plugins helps you create Facebook login and register buttons. The login and register process only takes one click and you can fully customize the buttons with images and other assets.', 'nextend-facebook-connect'); ?></p>
 	<h3><?php _e('Setup', 'nextend-facebook-connect'); ?></h3>
   <p>
-  <?php _e('<ol><li><a href="https://developers.facebook.com/apps/?action=create" target="_blank">Create a facebook app!</a></li>', 'nextend-facebook-connect'); ?>
-  <?php _e('<li>Choose an App Name, it can be anything you like</li>', 'nextend-facebook-connect'); ?>
-  <?php _e('<li>Click on <b>Continue</b></li>', 'nextend-facebook-connect'); ?>
-  <?php _e('<li>Go to the newly created <b>App settings page</b> and click <b>Edit Settings</b></li>', 'nextend-facebook-connect'); ?>
-  <?php _e('<li>Fill out <b>App Domains</b> field with: <b>'.$domain.'</b></li>', 'nextend-facebook-connect'); ?>
-  <?php _e('<li>Click on <b>Website with Facebook Login</b> tab abd fill out <b>Site URL</b> field with: <b>'.get_option('siteurl').'</b></li>', 'nextend-facebook-connect'); ?>
-  <?php _e('<li>Click on <b>Save changes</b> and the top of the page contains the <b>App Id</b> and <b>App secret</b> which you have to copy and past below.</li>', 'nextend-facebook-connect'); ?>
+  <?php _e('<ol><li><a href="https://developers.facebook.com/apps/" target="_blank">Create a facebook app!</a></li>', 'nextend-facebook-connect'); ?>
+  <?php _e('<li>Don\'t choose from the listed options, but click on <b>advanced setup</b> in the bottom.</li>', 'nextend-facebook-connect'); ?>
+  <?php _e('<li>Choose an <b>app name</b>, and a <b>category</b>, then click on <b>Create App ID</b>.</li>', 'nextend-facebook-connect'); ?>
+  <?php _e('<li>Pass the security check.</li>', 'nextend-facebook-connect'); ?>
+  <?php _e('<li>Go to the <b>Settings</b> of the application.</li>', 'nextend-facebook-connect'); ?>
+  <?php _e('<li>Click on <b>+ Add Platform</b>, and choose <b>Website</b>.</li>', 'nextend-facebook-connect'); ?>      
+  <?php _e('<li>Give your website\'s address at the <b>Site URL</b> field with: <b>'.get_option('siteurl').'</b></li>', 'nextend-facebook-connect'); ?>
+  <?php _e('<li>Click on <b>Save Changes</b>, then copy the <b>App ID</b>, and <b>APP Secret</b>, which you have to copy and paste below.</li>', 'nextend-facebook-connect'); ?>
   <?php _e('<li><b>Save changes!</b></li></ol>', 'nextend-facebook-connect'); ?>
   
   
