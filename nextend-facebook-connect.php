@@ -4,7 +4,7 @@
 Plugin Name: Nextend Facebook Connect
 Plugin URI: http://nextendweb.com/
 Description: This plugins helps you create Facebook login and register buttons. The login and register process only takes one click.
-Version: 1.5.1
+Version: 1.5.2
 Author: Roland Soos
 License: GPL2
 */
@@ -165,7 +165,9 @@ function new_fb_login_action() {
             require_once (ABSPATH . WPINC . '/registration.php');
             $random_password = wp_generate_password($length = 12, $include_standard_special_chars = false);
             if (!isset($new_fb_settings['fb_user_prefix'])) $new_fb_settings['fb_user_prefix'] = 'facebook-';
-            $sanitized_user_login = sanitize_user($new_fb_settings['fb_user_prefix'] . $user_profile['username']);
+            
+            $username = strtolower( $user_profile['first_name'] . $user_profile['last_name'] );
+            $sanitized_user_login = sanitize_user($new_fb_settings['fb_user_prefix'] . $username);
             if (!validate_username($sanitized_user_login)) {
               $sanitized_user_login = sanitize_user('facebook' . $user_profile['id']);
             }
@@ -204,7 +206,7 @@ function new_fb_login_action() {
             ));
           }
           if (isset($new_fb_settings['fb_redirect_reg']) && $new_fb_settings['fb_redirect_reg'] != '' && $new_fb_settings['fb_redirect_reg'] != 'auto') {
-            set_site_transient( nextend_uniqid().'_fb_r', $new_twitter_settings['twitter_redirect_reg'], 3600);
+            set_site_transient( nextend_uniqid().'_fb_r', $new_fb_settings['fb_redirect_reg'], 3600);
           }
         }
         if ($ID) { // Login
