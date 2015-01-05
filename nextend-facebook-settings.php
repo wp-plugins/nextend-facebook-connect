@@ -83,7 +83,9 @@ function NextendFB_Options_Page() {
   <?php _e('<li>Go to the <b>Settings</b> of the application.</li>', 'nextend-facebook-connect'); ?>
   <?php _e('<li>Click on <b>+ Add Platform</b>, and choose <b>Website</b>.</li>', 'nextend-facebook-connect'); ?>      
   <?php _e('<li>Give your website\'s address at the <b>Site URL</b> field with: <b>'.get_option('siteurl').'</b></li>', 'nextend-facebook-connect'); ?>
-  <?php _e('<li>Click on <b>Save Changes</b>, then copy the <b>App ID</b>, and <b>APP Secret</b>, which you have to copy and paste below.</li>', 'nextend-facebook-connect'); ?>
+  <?php _e('<li>Give a <b>Contact Email</b> and click on <b>Save Changes</b>.</li>', 'nextend-facebook-connect'); ?>
+  <?php _e('<li>Go to <b>Status & Review</b>, and change the availability for the general public to <b>YES</b>.</li>', 'nextend-facebook-connect'); ?>
+  <?php _e('<li>Go back to the <b>Settings</b>, and copy the <b>App ID</b>, and <b>APP Secret</b>, which you have to copy and paste below.</li>', 'nextend-facebook-connect'); ?>
   <?php _e('<li><b>Save changes!</b></li></ol>', 'nextend-facebook-connect'); ?>
   
   
