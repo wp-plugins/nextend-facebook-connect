@@ -4,7 +4,7 @@
 Plugin Name: Nextend Facebook Connect
 Plugin URI: http://nextendweb.com/
 Description: This plugins helps you create Facebook login and register buttons. The login and register process only takes one click.
-Version: 1.5.4
+Version: 1.5.5
 Author: Roland Soos
 License: GPL2
 */
@@ -417,7 +417,7 @@ add_filter('plugin_action_links', 'new_fb_plugin_action_links', 10, 2);
 function new_fb_plugin_action_links($links, $file) {
 
   if ($file != NEW_FB_LOGIN_PLUGIN_BASENAME) return $links;
-  $settings_link = '<a href="' . menu_page_url('nextend-facebook-connect', false) . '">' . esc_html(__('Settings', 'nextend-facebook-connect')) . '</a>';
+  $settings_link = '<a href="' . esc_attr(menu_page_url('nextend-facebook-connect', false)) . '">' . esc_html(__('Settings', 'nextend-facebook-connect')) . '</a>';
   array_unshift($links, $settings_link);
   return $links;
 }
@@ -429,19 +429,19 @@ Miscellaneous functions
 function new_fb_sign_button() {
 
   global $new_fb_settings;
-  return '<a href="' . new_fb_login_url() . (isset($_GET['redirect_to']) ? '&redirect=' . $_GET['redirect_to'] : '') . '" rel="nofollow">' . $new_fb_settings['fb_login_button'] . '</a><br />';
+  return '<a href="' . esc_attr(new_fb_login_url() . (isset($_GET['redirect_to']) ? '&redirect=' . $_GET['redirect_to'] : '')) . '" rel="nofollow">' . $new_fb_settings['fb_login_button'] . '</a><br />';
 }
 
 function new_fb_link_button() {
 
   global $new_fb_settings;
-  return '<a href="' . new_fb_login_url() . '&redirect=' . new_fb_curPageURL() . '">' . $new_fb_settings['fb_link_button'] . '</a><br />';
+  return '<a href="' . esc_attr(new_fb_login_url() . '&redirect=' . new_fb_curPageURL()) . '">' . $new_fb_settings['fb_link_button'] . '</a><br />';
 }
 
 function new_fb_unlink_button() {
 
   global $new_fb_settings;
-  return '<a href="' . new_fb_login_url() . '&action=unlink&redirect=' . new_fb_curPageURL() . '">' . $new_fb_settings['fb_unlink_button'] . '</a><br />';
+  return '<a href="' . esc_attr(new_fb_login_url() . '&action=unlink&redirect=' . new_fb_curPageURL()) . '">' . $new_fb_settings['fb_unlink_button'] . '</a><br />';
 }
 
 function new_fb_curPageURL() {
